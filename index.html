@@ -824,12 +824,12 @@ which is why i decided to make a method that can surve that purpose for us.
 <pre class="prettyprint linenums lang-opa"> 
 _.mixin({ 
 
-  makeLogging : <span style=' color: Blue;'>function</span>(f,functionName){ 
+  makeLogging : <span style=' color: #229948;'>function</span>(f,functionName){ 
     <span style=' color: Green;'>// This logging has two mode, printing while executing</span> 
     <span style=' color: Green;'>// which would be the lg prints or the Log array which </span> 
     <span style=' color: Green;'>// we can print them out using outputLog, all at once</span> 
-    <span style=' color: Blue;'>var</span> log = [];             
-    <span style=' color: Blue;'>function</span> wrapper(){ 
+    <span style=' color: #46a546;'>var</span> log = [];             
+    <span style=' color: White;'>function</span> wrapper(){ 
       lg(functionName + <span style=' color: Maroon;'>" function has been called."</span>);    
       <span style=' color: Blue;'>if</span>(_.isEmpty(arguments)){lg(<span style=' color: Maroon;'>"There is no parameter passed"</span>);} 
       <span style=' color: Blue;'>else</span> {lg(<span style=' color: Maroon;'>"Parameters in this function are :"</span>);console.log(arguments);}         
