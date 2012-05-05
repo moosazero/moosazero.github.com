@@ -821,7 +821,7 @@ which is why i decided to make a method that can surve that purpose for us.
 </div>
 
 <pre class="prettyprint linenums lang-opa"><ol class="linenums"><li class="L0"><span class="pln"> </span><span class="com">// Opa decides</span></li><li class="L1"><span class="kwd">function</span><span class="pln"> client_or_server</span><span class="pun">(</span><span class="pln">x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">...</span><span class="pln"> </span><span class="pun">}</span></li><li class="L2"><span class="pln"> </span><span class="com">// Client-side</span></li><li class="L3"><span class="pln">client </span><span class="kwd">function</span><span class="pln"> client_function</span><span class="pun">(</span><span class="pln">x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">...</span><span class="pln"> </span><span class="pun">}</span></li><li class="L4"><span class="pln"> </span><span class="com">// Server-side</span></li><li class="L5"><span class="pln">server </span><span class="kwd">function</span><span class="pln"> server_function</span><span class="pun">(</span><span class="pln">x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">...</span><span class="pln"> </span><span class="pun">}</span></li></ol></pre>
-<pre> 
+<pre style='background-color: #333;'> 
 _.mixin({ 
 
   makeLogging : <span style=' color:skyBlue;'>function</span>(f,functionName){ 
