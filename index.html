@@ -821,6 +821,42 @@ which is why i decided to make a method that can surve that purpose for us.
 </div>
 
 <pre class="prettyprint linenums lang-opa"><ol class="linenums"><li class="L0"><span class="pln"> </span><span class="com">// Opa decides</span></li><li class="L1"><span class="kwd">function</span><span class="pln"> client_or_server</span><span class="pun">(</span><span class="pln">x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">...</span><span class="pln"> </span><span class="pun">}</span></li><li class="L2"><span class="pln"> </span><span class="com">// Client-side</span></li><li class="L3"><span class="pln">client </span><span class="kwd">function</span><span class="pln"> client_function</span><span class="pun">(</span><span class="pln">x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">...</span><span class="pln"> </span><span class="pun">}</span></li><li class="L4"><span class="pln"> </span><span class="com">// Server-side</span></li><li class="L5"><span class="pln">server </span><span class="kwd">function</span><span class="pln"> server_function</span><span class="pun">(</span><span class="pln">x</span><span class="pun">,</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="pun">...</span><span class="pln"> </span><span class="pun">}</span></li></ol></pre>
+<pre> 
+_.mixin({ 
+
+  makeLogging : <span style=' color: Blue;'>function</span>(f,functionName){ 
+    <span style=' color: Green;'>// This logging has two mode, printing while executing</span> 
+    <span style=' color: Green;'>// which would be the lg prints or the Log array which </span> 
+    <span style=' color: Green;'>// we can print them out using outputLog, all at once</span> 
+    <span style=' color: Blue;'>var</span> log = [];             
+    <span style=' color: Blue;'>function</span> wrapper(){ 
+      lg(functionName + <span style=' color: Maroon;'>" function has been called."</span>);    
+      <span style=' color: Blue;'>if</span>(_.isEmpty(arguments)){lg(<span style=' color: Maroon;'>"There is no parameter passed"</span>);} 
+      <span style=' color: Blue;'>else</span> {lg(<span style=' color: Maroon;'>"Parameters in this function are :"</span>);console.log(arguments);}         
+      log.push(arguments); 
+      <span style=' color: Blue;'>var</span> returned = f.apply(<span style=' color: Blue;'>this</span>,arguments);
+      <span style=' color: Blue;'>if</span>(_.isEmpty(returned))lg(functionName + <span style=' color: Maroon;'>" function won't return anything."</span>); 
+      <span style=' color: Blue;'>else</span> {lg(functionName + <span style=' color: Maroon;'>" function returns : "</span>);console.log(returned);} 
+      <span style=' color: Blue;'>return</span> returned; 
+    } 
+    wrapper.outputLog = <span style=' color: Blue;'>function</span>() { 
+      _.each(Log,<span style=' color: Blue;'>function</span>(args){ lg(<span style=' color: Maroon;'>"arguments are :"</span>);lg(args);}) 
+        } 
+    <span style=' color: Blue;'>return</span> wrapper; 
+  }, 
+
+  logDecorate : <span style=' color: Blue;'>function</span>(_this){ 
+    <span style=' color: Blue;'>var</span> objs = _this.__proto__;     
+    <span style=' color: Blue;'>var</span> objNames = Object.getOwnPropertyNames(_this.__proto__);
+    <span style=' color: Blue;'>for</span> (<span style=' color: Blue;'>var</span> index=<span style=' color: Maroon;'>0</span>; index&lt;objNames.length; index++){ 
+      <span style=' color: Blue;'>if</span>(_.isFunction(objs[objNames[index]])) 
+      { 
+        _this[objNames[index]] = <span style=' color: Blue;'>this</span>.makeLogging(objs[objNames[index]],objNames[index]);
+      }         
+    } 
+  } 
+}); 
+</pre>
 </div>
 
 </body>
