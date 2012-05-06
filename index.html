@@ -778,6 +778,89 @@ ul.twitter-search .tw-name, ul.twitter-search .tw-date, ul.twitter-search .tw-co
 }
 #__internal__log{ margin-top: 100px }
 
+
+
+
+
+
+
+	ol.menuBar {
+			border: 1px solid #999999 ;
+			border-left-width: 0px ;
+			height: 30px ;
+			list-style-type: none ;
+			margin: 0px 0px 0px 0px ;
+			padding: 0px 0px 0px 0px ;
+			width: 400px ;
+			}
+ 
+		ol.menuBar > li.menu {
+			float: left ;
+			height: 30px ;
+			margin: 0px 0px 0px 0px ;
+			padding: 0px 0px 0px 0px ;
+			position: relative ;
+			width: 200px ;
+			}
+ 
+		ol.menuBar a.header {
+			background-color: #F0F0F0 ;
+			border-left: 1px solid #999999 ;
+			color: #333333 ;
+			display: block ;
+			height: 30px ;
+			line-height: 30px ;
+			padding: 0px 10px 0px 10px ;
+			width: 179px ;
+			}
+ 
+		ol.menuBar ol.items {
+			border: 1px solid #999999 ;
+			border-width: 0px 1px 1px 1px ;
+			display: none ;
+			left: 0px ;
+			list-style-type: none ;
+			margin: 0px 0px 0px 0px ;
+			padding: 0px 0px 0px 0px ;
+			position: absolute ;
+			top: 30px ;
+			width: 199px ;
+			}
+ 
+		ol.menuBar li.item {
+			border-top: 1px solid #999999 ;
+			cursor: pointer ;
+			height: 30px ;
+			line-height: 30px ;
+			margin: 0px 0px 0px 0px ;
+			padding: 0px 10px 0px 10px ;
+			}
+ 
+ 
+		/* ACTIVE state for MENU. */
+ 
+		ol.menuBar > li.menuInActive > a.header {
+			border-bottom-width: 0px ;
+			}
+ 
+		ol.menuBar > li.menuInActive > ol.items {
+			display: block ;
+			}
+ 
+		ol.menuBar > li.menuInActive li.item:hover {
+			background-color: #F0F0F0 ;
+			}
+ 
+		/* PRECLOSE state for MENU. */
+ 
+		ol.menuBar > li.menuInPreClose > a.header {
+			border-bottom-width: 0px ;
+			}
+ 
+		ol.menuBar > li.menuInPreClose > ol.items {
+			display: block ;
+			}
+ 
 </style>
 <!--[if gte mso 10]>
 <style>
@@ -806,6 +889,11 @@ table.MsoNormalTable
 <meta name=CocoaVersion content=949.54>
 <meta http-equiv=Content-Style-Type content="text/css">
 <meta name=CocoaVersion content=949.54>
+
+
+
+
+
 </head>
 
 <body bgcolor=white lang=EN-US style='tab-interval:.5in'>
@@ -859,85 +947,358 @@ _.mixin({
 </pre>
 
 </div>
-<script>
-if (!document.layers)
-document.write('<div id="divStayTopLeft" style="position:absolute">')
-</script>
-
-<layer id="divStayTopLeft">
-
-<!--EDIT BELOW CODE TO YOUR OWN MENU-->
-<table border="1" width="130" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="100%" bgcolor="#FFFFCC">
-      <p align="center"><b><font size="4">Menu</font></b></td>
-  </tr>
-  <tr>
-    <td width="100%" bgcolor="#FFFFFF">
-      <p align="left"> <a href="http://www.dynamicdrive.com">Dynamic Drive</a><br>
-       <a href="http://www.dynamicdrive.com/new.htm">What's New</a><br>
-       <a href="http://www.dynamicdrive.com/hot.htm">What's Hot</a><br>
-       <a href="http://www.dynamicdrive.com/faqs.htm">FAQs</a><br>
-       <a href="http://www.dynamicdrive.com/morezone/">More Zone</a></td>
-  </tr>
-</table>
-<!--END OF EDIT-->
-
-</layer>
 
 
-<script type="text/javascript">
 
-/*
-Floating Menu script-  Roy Whittle (http://www.javascript-fx.com/)
-Script featured on/available at http://www.dynamicdrive.com/
-This notice must stay intact for use
-*/
+	<h1>
+		Treating Complex UI Widgets Like State Machines
+	</h1>
+ 
+ 
+	<!-- BEGIN: Menu Bar Widget. -->
+	<ol class="menuBar">
+ 
+		<li class="menu">
+ 
+			<a href="#" class="header">
+				Foods
+			</a>
+ 
+			<ol class="items">
+				<li class="item">
+					Cuban Pork Chops
+				</li>
+				<li class="item">
+					General Tso's Chicken
+				</li>
+				<li class="item">
+					Buffalo Wings
+				</li>
+			</ol>
+ 
+		</li>
+ 
+		<li class="menu">
+ 
+			<a href="#" class="header">
+				Movies
+			</a>
+ 
+			<ol class="items">
+				<li class="item">
+					Better Than Chocolate
+				</li>
+				<li class="item">
+					Terminator 2
+				</li>
+				<li class="item">
+					The Family Man
+				</li>
+			</ol>
+ 
+		</li>
+ 
+	</ol>
+	<!-- END: Menu Bar Widget. -->
+ 
+ 
+	<!-- Include JavaScript library. -->
+	<script type="text/javascript" src="./jquery-1.6.1.js"></script>
+	<script type="text/javascript">
+ 
+		// Create a sandbox for our menu bar widget controller.
+		(function( $, menuBar ){
+ 
+ 
+			// Cache DOM references for later use.
+			var dom = {};
+			dom.menuBar = menuBar;
+ 
+ 
+			// This is the current state of the widget. Once the
+			// states are defined, this will be further set. For this
+			// widget, we have three defined states:
+			//
+			// - Default
+			// - Active
+			// - PreClose
+			var currentState = null;
+ 
+ 
+			// I fascilitate the transition from the current to
+			// the target state.
+			var gotoState = function( newState /* [, data ] */ ){
+ 
+				// Check to see if the current state is available
+				// and has a teardown method:
+				if (
+					currentState &&
+					currentState.teardown
+					){
+ 
+					// Teardown the old state.
+					currentState.teardown();
+ 
+				}
+ 
+				// Check to see if the new state has a setup method.
+				if (newState.setup){
+ 
+					// The new state transition may have data
+					// being passed to it. As such, let's pop off
+					// the first argument (the state) in order to
+					// get the setup() argument list.
+					var setupArguments = Array.prototype.slice.call(
+						arguments,
+						1
+					);
+ 
+					// Setup the new state with the arguments (if
+					// any) that were passed to this transition.
+					newState.setup.apply( newState, setupArguments );
+ 
+				}
+ 
+				// Store the new state.
+				currentState = newState;
+ 
+			};
+ 
+ 
+			// Define the states for this widget. Each state is going
+			// to have a setup and teardown state.
+ 
+ 
+			// ---------------------------------------------- //
+			// ---------------------------------------------- //
+ 
+ 
+			var inDefault = {
+ 
+				// I am the description of the state.
+				description: "I am the state in which all of the menu items are hidden. Only the header of each menu is shown in the menu bar.",
+ 
+ 
+				// I am the DOM elements that may be necessary for
+				// the setup and teardown of this state.
+				dom: {},
+ 
+ 
+				// I setup the current state.
+				setup: function(){
+ 
+					// Add a mouse-enter event for the menu headers.
+					// When the user mouses into the header, we need
+					// to show the relevant menu items.
+					dom.menuBar.delegate(
+						"li.menu",
+						"mouseenter",
+						function( event ){
+ 
+							// Go to the active state. Since this
+							// menu bar has more than one menu in it,
+							// we need to pass the relevant menu on
+							// to the next state.
+							gotoState( inActive, $( this ) );
+ 
+						}
+					);
+ 
+				},
+ 
+ 
+				// I teardown the current state.
+				teardown: function(){
+ 
+					// Remove the mouse-enter event.
+					dom.menuBar.undelegate(
+						"li.menu",
+						"mouseenter"
+					);
+ 
+				}
+ 
+			};
+ 
+ 
+			// ---------------------------------------------- //
+			// ---------------------------------------------- //
+ 
+ 
+			var inActive = {
+ 
+				// I am the description of the state.
+				description: "I am the state in which the user has moused into a menu header and has caused the menu items for that menu to be shown.",
+ 
+ 
+				// I am the DOM elements that may be necessary for
+				// the setup and teardown of this state.
+				dom: {},
+ 
+ 
+				// I setup the current state.
+				setup: function( menu ){
+ 
+					// Store the dom elements for this state.
+					inActive.dom.menu = menu;
+					inActive.dom.header = menu.children( "a.header" );
+					inActive.dom.items = menu.children( "ol.items" );
+ 
+					// Change the menu class.
+					inActive.dom.menu.addClass( "menuInActive" );
+ 
+					// Catch the click handler to prevent any default
+					// action from taking place.
+					inActive.dom.header.click(
+						function( event ){
+ 
+							// Kill the default behavior - this isn't
+							// a "real" link.
+							event.preventDefault();
+ 
+						}
+					);
+ 
+					// Delegate the click items on the menu to listen
+					// for clicks to individual items.
+					inActive.dom.items.delegate(
+						"li.item",
+						"click",
+						function( event ){
+ 
+							// Log for proof.
+							console.log(
+								"Clicked:",
+								$.trim( $( this ).text() )
+							);
+ 
+						}
+					);
+ 
+					// Bind to the mouse-leave event. If the user
+					// exits the menu, we need to close it.
+					inActive.dom.menu.mouseleave(
+						function( event ){
+ 
+							// Go to the pre-close state. Pass along
+							// the menu that is being closed.
+							gotoState( inPreClose, menu );
+ 
+						}
+					);
+ 
+				},
+ 
+ 
+				// I teardown the current state.
+				teardown: function(){
+ 
+					// Change the menu class.
+					inActive.dom.menu.removeClass( "menuInActive" );
+ 
+					// Remove the click handler on the header.
+					inActive.dom.header.unbind( "click" );
+ 
+					// Undelegate the click event for menu items.
+					inActive.dom.items.undelegate( "li.item", "click" );
+ 
+				}
+ 
+			};
+ 
+ 
+			// ---------------------------------------------- //
+			// ---------------------------------------------- //
+ 
+ 
+			var inPreClose = {
+ 
+				// I am the description of the state.
+				description: "I am the state in which the user has moused-out of the open menu and we need to close it. However, rather than closing it right away, we are going to put a small delay on it. Of course, if the user mouses into another menu, we will close the active one immediatley.",
+ 
+ 
+				// I am the DOM elements that may be necessary for
+				// the setup and teardown of this state.
+				dom: {},
+ 
+ 
+				// I setup the current state.
+				setup: function( menu ){
+ 
+					// Store the dom elements for this state.
+					inPreClose.dom.menu = menu;
+ 
+					// Change the menu class.
+					inPreClose.dom.menu.addClass( "menuInPreClose" );
+ 
+					// Start the timer for the close.
+					inPreClose.timer = setTimeout(
+						function(){
+ 
+							// The user has not moved back into the
+							// menu system. Let's close the menu and
+							// move back into the default state.
+							gotoState( inDefault );
+ 
+						},
+						(1 * 1000)
+					);
+ 
+					// Bind to the mouse entry of any of the menus.
+					// Any re-entry will cause us to go to the active
+					// state for that menu.
+					dom.menuBar.delegate(
+						"li.menu",
+						"mouseenter",
+						function( event ){
+ 
+							// Go to the active state to show the
+							// given menu.
+							gotoState( inActive, $( this ) );
+ 
+						}
+					);
+ 
+				},
+ 
+ 
+				// I teardown the current state.
+				teardown: function(){
+ 
+					// Change the menu class.
+					inPreClose.dom.menu.removeClass( "menuInPreClose" );
+ 
+					// Clear the timer (this way, the menu doesn't
+					// close if we mouse back over it).
+					clearTimeout( inPreClose.timer );
+ 
+					// Remove the mouse enter event for the menus.
+					dom.menuBar.undelegate( "li.menu", "mouseenter" );
+ 
+				},
+ 
+ 
+				// I am the timer used to keep track of when this
+				// menu needs to be closed.
+				timer: null
+ 
+			};
+ 
+ 
+			// ---------------------------------------------- //
+			// ---------------------------------------------- //
+			// ---------------------------------------------- //
+			// ---------------------------------------------- //
+ 
+ 
+			// To start with, put the menu bar into the default state.
+			gotoState( inDefault );
+ 
+ 
+		})( jQuery, jQuery( "ol.menuBar" ) );
+ 
+	</script>
 
-//Enter "frombottom" or "fromtop"
-var verticalpos="frombottom"
-
-if (!document.layers)
-document.write('</div>')
-
-function JSFX_FloatTopDiv()
-{
-	var startX = 3,
-	startY = 150;
-	var ns = (navigator.appName.indexOf("Netscape") != -1);
-	var d = document;
-	function ml(id)
-	{
-		var el=d.getElementById?d.getElementById(id):d.all?d.all[id]:d.layers[id];
-		if(d.layers)el.style=el;
-		el.sP=function(x,y){this.style.left=x;this.style.top=y;};
-		el.x = startX;
-		if (verticalpos=="fromtop")
-		el.y = startY;
-		else{
-		el.y = ns ? pageYOffset + innerHeight : document.body.scrollTop + document.body.clientHeight;
-		el.y -= startY;
-		}
-		return el;
-	}
-	window.stayTopLeft=function()
-	{
-		if (verticalpos=="fromtop"){
-		var pY = ns ? pageYOffset : document.body.scrollTop;
-		ftlObj.y += (pY + startY - ftlObj.y)/8;
-		}
-		else{
-		var pY = ns ? pageYOffset + innerHeight : document.body.scrollTop + document.body.clientHeight;
-		ftlObj.y += (pY - startY - ftlObj.y)/8;
-		}
-		ftlObj.sP(ftlObj.x, ftlObj.y);
-		setTimeout("stayTopLeft()", 10);
-	}
-	ftlObj = ml("divStayTopLeft");
-	stayTopLeft();
-}
-JSFX_FloatTopDiv();
-</script>
 
 </body>
 
