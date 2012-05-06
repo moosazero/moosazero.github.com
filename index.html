@@ -1,414 +1,871 @@
-<--- --------------------------------------------------------------------------------------- ----
-	
-	Blog Entry:
-	Treating User Interface (UI) Widgets Like Finite State Machines
-	
-	Author:
-	Ben Nadel / Kinky Solutions
-	
-	Link:
-	http://www.bennadel.com/index.cfm?event=blog.view&id=2242
-	
-	Date Posted:
-	Aug 17, 2011 at 11:09 AM
-	
----- --------------------------------------------------------------------------------------- --->
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+xmlns="http://www.w3.org/TR/REC-html40">
 
-
-<!DOCTYPE html>
-<html>
 <head>
-	<title>Treating UI Widgets Like State Machines</title>
- 
-	<style type="text/css">
- 
-		/* DEFAULT state for MENU. */
- 
-		div.menu {
-			height: 30px ;
-			position: relative ;
-			width: 200px ;
-			}
- 
-		div.menu > a.header {
-			background-color: #F0F0F0 ;
-			border: 1px solid #999999 ;
-			border-radius: 5px 5px 5px 5px ;
-			color: #333333 ;
-			display: block ;
-			height: 30px ;
-			line-height: 30px ;
-			padding: 0px 10px 0px 10px ;
-			width: 180px ;
-			}
- 
-		div.menu > ol.items {
-			border: 1px solid #999999 ;
-			border-width: 0px 1px 1px 1px ;
-			border-radius: 0px 0px 5px 5px ;
-			display: none ;
-			left: 0px ;
-			list-style-type: none ;
-			margin: 0px 0px 0px 0px ;
-			padding: 0px 0px 0px 0px ;
-			position: absolute ;
-			top: 30px ;
-			width: 200px ;
-			}
- 
-		div.menu li.item {
-			border-top: 1px solid #999999 ;
-			cursor: pointer ;
-			height: 30px ;
-			line-height: 30px ;
-			margin: 0px 0px 0px 0px ;
-			padding: 0px 10px 0px 10px ;
-			}
- 
- 
-		/* HOVER state for MENU. */
- 
-		div.menuInHover {}
- 
-		div.menuInHover > a.header {
-			background-color: #EAEAEA ;
-			border-color: #333333 ;
-			}
- 
- 
-		/* ACTIVE state for MENU. */
- 
-		div.menuInActive {}
- 
-		div.menuInActive > a.header {
-			border-bottom-width: 0px ;
-			border-radius: 5px 5px 0px 0px ;
-			}
- 
-		div.menuInActive > ol.items {
-			display: block ;
-			}
- 
-		div.menuInActive li.item:hover {
-			background-color: #F0F0F0 ;
-			}
- 
-	</style>
+<meta name=Title content="">
+<meta name=Keywords content="">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 2008">
+<meta name=Originator content="Microsoft Word 2008">
+<link rel=File-List href="index_files/filelist.xml">
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Template>Normal.dotm</o:Template>
+  <o:LastAuthor>moosa esfahanian</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>1</o:TotalTime>
+  <o:Created>2012-04-28T21:12:00Z</o:Created>
+  <o:LastSaved>2012-04-28T21:13:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>2</o:Words>
+  <o:Characters>14</o:Characters>
+  <o:Lines>1</o:Lines>
+  <o:Paragraphs>1</o:Paragraphs>
+  <o:CharactersWithSpaces>17</o:CharactersWithSpaces>
+  <o:Version>12.0</o:Version>
+ </o:DocumentProperties>
+ <o:OfficeDocumentSettings>
+  <o:AllowPNG/>
+ </o:OfficeDocumentSettings>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:TrackMoves>false</w:TrackMoves>
+  <w:TrackFormatting/>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:SplitPgBreakAndParaMark/>
+   <w:DontVertAlignCellWithSp/>
+   <w:DontBreakConstrainedForcedTables/>
+   <w:DontVertAlignInTxbx/>
+   <w:Word11KerningPairs/>
+   <w:CachedColBalance/>
+   <w:UseFELayout/>
+  </w:Compatibility>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="276">
+ </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:Times;
+	panose-1:2 0 5 0 0 0 0 0 0 0;
+	mso-font-charset:0;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ascii-font-family:Times;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-hansi-font-family:Times;
+	mso-bidi-font-family:"Times New Roman";
+	mso-bidi-theme-font:minor-bidi;}
+p.p1, li.p1, div.p1
+	{mso-style-name:p1;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-ascii-font-family:Helvetica;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-hansi-font-family:Helvetica;
+	mso-bidi-font-family:"Times New Roman";
+	mso-bidi-theme-font:minor-bidi;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+
+
+
+
+/* Pretty printing styles. Used with prettify.js. */
+/* Vim sunburst theme by David Leibovic */
+red_color_font { color:#E28964;}
+pre .str, code .str { color: #65B042; } /* string  - green */
+pre .kwd, code .kwd { color: #E28964; } /* keyword - dark pink */
+pre .com, code .com { color: #AEAEAE; font-style: italic; } /* comment - gray */
+pre .typ, code .typ { color: #89bdff; } /* type - light blue */
+pre .lit, code .lit { color: #3387CC; } /* literal - blue */
+pre .pun, code .pun { color: #fff; } /* punctuation - white */
+pre .pln, code .pln { color: #fff; } /* plaintext - white */
+pre .tag, code .tag { color: #89bdff; } /* html/xml tag    - light blue */
+pre .atn, code .atn { color: #bdb76b; } /* html/xml attribute name  - khaki */
+pre .atv, code .atv { color: #65B042; } /* html/xml attribute value - green */
+pre .dec, code .dec { color: #3387CC; } /* decimal - blue */
+
+pre.prettyprint, code.prettyprint {
+   background-color: gray;
+﻿  -moz-border-radius: 8px;
+﻿  -webkit-border-radius: 8px;
+﻿  -o-border-radius: 8px;
+﻿  -ms-border-radius: 8px;
+﻿  -khtml-border-radius: 8px;
+﻿  border-radius: 8px;
+}
+
+pre.prettyprint {
+﻿  width: 95%;
+﻿  margin: 1em auto;
+﻿  padding: 1em;
+﻿  white-space: pre-wrap;
+background-color: gray;
+}
+
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE; } /* IE indents via margin-left */
+li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8, li.L9 { list-style-type: none }
+/* Alternate shading for lines */
+li.L1,li.L3,li.L5,li.L7,li.L9 { }
+
+
+
+
+
+
+
+
+html {background:#151515 url("/img/texture-grunge-black-tile.png") repeat 0 0;}
+body {
+    padding-top:50px;
+    color:#777;
+    background: #FAFAFA url("/img/lightgray-textured-bg.png") repeat 0 0;
+}
+body, p, li, input, button, select, textarea {
+    font-family:"Lucida Grande",helvetica,verdana,sans-serif;
+}
+body, p, li {
+    font-size:12px;
+    line-height:20px;
+}
+h1, h2, h3 {letter-spacing: -1px;}
+
+/* Links */
+a {color:#18D;}
+a:hover {color:#26B;}
+
+/* Titles */
+h1 {color: #196DB5;font-size:26px;font-weight:300;margin-bottom:20px;text-shadow: 0 1px -1px white;}
+h2 {color: #555;font-size:22px;font-weight:300;margin-bottom:10px;text-shadow: 0 1px -1px white;}
+h3 {font-weight:normal;color:#444;margin-bottom: 10px;}
+h4 {color: #444;margin-bottom: 8px;line-height:20px;}
+h5 {color: #444;line-height:20px;}
+h6 {line-height:20px; color:#AAA;}
+.bold {font-weight:bold;}
+.italic {font-style:italic;}
+
+/* Clear */
+.clear, .clearfix {clear:both;}
+
+/* Positioning */
+.centered {text-align:center;}
+img.centered {
+    margin: 0 auto;
+    position: relative;
+    display: block;
+}
+.inset1 {padding:3%;}
+
+/* Iframes */
+.embedded_iframe iframe {border:1px solid #ccc;}
+.modal-footer iframe {margin-left:5px;}
+.social-media-btns iframe {display:inline-block;margin: 0 10px 0 0;vertical-align:middle;}
+
+/* Buttons */
+/*.btn {
+  color:#196DB5;
+  background-color: #F1F9FE;
+  background-image: -moz-linear-gradient(top, #FFFFFF, #D5ECFB);
+  background-image: -ms-linear-gradient(top, #FFFFFF, #D5ECFB);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FFFFFF), to(#D5ECFB));
+  background-image: -webkit-linear-gradient(top, #FFFFFF, #D5ECFB);
+  background-image: -o-linear-gradient(top, #FFFFFF, #D5ECFB);
+  background-image: linear-gradient(top, #FFFFFF, #D5ECFB);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#D5ECFB', GradientType=0);
+  border-color: #D5ECFB #D5ECFB #3f6523;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.btn:hover,
+.btn:active,
+.btn.active,
+.btn.disabled,
+.btn[disabled] {
+  background-color: #D5ECFB;
+}
+.btn:active,
+.btn.active {
+  background-color: #D5ECFB \9;
+}*/
+
+/* Green button */
+.btn-success {
+  color:white;
+  background-color: #88b567;
+  background-image: -moz-linear-gradient(top, #a1c587, #629e36);
+  background-image: -ms-linear-gradient(top, #a1c587, #629e36);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#a1c587), to(#629e36));
+  background-image: -webkit-linear-gradient(top, #a1c587, #629e36);
+  background-image: -o-linear-gradient(top, #a1c587, #629e36);
+  background-image: linear-gradient(top, #a1c587, #629e36);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a1c587', endColorstr='#629e36', GradientType=0);
+  border-color: #629e36 #629e36 #3f6523;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+  background-color: #629e36;
+}
+.btn-success:active,
+.btn-success.active {
+  background-color: #4a7829 \9;
+}
+
+/* Blue button */
+.btn-primary {
+  color:white;
+  background-color: #1e8ccf;
+  background-image: -moz-linear-gradient(top, #2797d9, #117cc0);
+  background-image: -ms-linear-gradient(top, #2797d9, #117cc0);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#2797d9), to(#117cc0));
+  background-image: -webkit-linear-gradient(top, #2797d9, #117cc0);
+  background-image: -o-linear-gradient(top, #2797d9, #117cc0);
+  background-image: linear-gradient(top, #2797d9, #117cc0);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2797d9', endColorstr='#117cc0', GradientType=0);
+  border-color: #117cc0 #117cc0 #0b4f7a;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  background-color: #117cc0;
+}
+.btn-primary:active,
+.btn-primary.active {
+  background-color: #0d5e91 \9;
+}
+
+/* Sky blue button */
+.btn-info {
+  color:white;
+  background-color: #56b3df;
+  background-image: -moz-linear-gradient(top, #6abce3, #38a6d9);
+  background-image: -ms-linear-gradient(top, #6abce3, #38a6d9);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6abce3), to(#38a6d9));
+  background-image: -webkit-linear-gradient(top, #6abce3, #38a6d9);
+  background-image: -o-linear-gradient(top, #6abce3, #38a6d9);
+  background-image: linear-gradient(top, #6abce3, #38a6d9);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6abce3', endColorstr='#38a6d9', GradientType=0);
+  border-color: #38a6d9 #38a6d9 #207ba5;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.btn-info:hover,
+.btn-info:active,
+.btn-info.active,
+.btn-info.disabled,
+.btn-info[disabled] {
+  background-color: #38a6d9;
+}
+.btn-info:active,
+.btn-info.active {
+  background-color: #248bba \9;
+}
+
+/* Navbar */
+.navbar .navbar-inner {
+    border-bottom:1px solid #3F3F3F;
+    background:#151515 url("/img/texture-grunge-black-gradient.png") repeat-x 0 20%;
+}
+.navbar .brand {padding: 8px 20px;}
+.navbar .nav > li > div > a{
+    float: none;
+    display:block;
+    line-height: 19px;
+    color: #999;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.navbar .nav > li > a, .navbar .nav > li > div > a {padding: 18px 12px;}
+.navbar .nav .active > a, .navbar .nav .active > a:hover {background:#1D1D1D;}
+.navbar .dropdown-menu a {padding: 3px 15px;}
+.navbar .divider-vertical {margin-top:7px;}
+
+/* Back link */
+.navbar a.go-back {
+    position:absolute;
+    right:5px;
+    top:0;
+    display:block;
+    background-color:#bfbfbf;
+    color:#252525;
+    text-shadow: 0 -1px 1px #DDD;
+    font-size:0.9em;
+    padding:4px 8px;
+    border-radius:0 0 5px 5px;
+}
+
+/* Hero unit */
+.hero-unit {
+    background:#151515 url("/img/texture-grunge-black-gradient.png") repeat-x 0 0;
+    border-bottom: 1px solid white;
+    -webkit-border-radius: 0;
+    -moz-border-radius:0;
+    border-radius: 0;
+    margin: 0;
+    padding:0;
+}
+.hero-unit .container {
+    background:url("/img/gradient-radial-top-60.png") no-repeat top center;
+    padding: 40px 0 30px 0;
+    text-shadow:0 -1px 1px black;
+}
+
+.hero-unit h1{color:#E9E9E9;font-size:40px;margin-bottom:20px;letter-spacing:-2px;text-shadow: 0 -1px -1px black;}
+.hero-unit h2, .hero-unit h4 {color:#808080;line-height:24px;text-shadow: 0 -1px -1px black;}
+.hero-unit h1 > img {vertical-align:top;}
+.hero-unit ul.unstyled li {border-bottom:1px solid #000;border-top:1px solid #2B2B2B;padding:15px 0 15px 15px;}
+.hero-unit ul.unstyled li:first-child {border-top:0;}
+.hero-unit ul.unstyled, .hero-unit hr {border-bottom:1px solid #2B2B2B;}
+.hero-unit .buttons {
+    margin: 10px -15px 0 -15px;
+    padding:20px 0;
+}
+.hero-unit hr {border-top:1px solid #000;}
+.hero-unit .buttons a, .hero-unit iframe {vertical-align:middle;}
+.hero-unit .divider-vertical {
+    height:20px; 
+    width:1px; 
+    display:inline-block; 
+    background-color:black; 
+    border-right:1px solid #333;
+    vertical-align:middle;
+    margin:0 6px;
+}
+.hero-unit .github-btn-large .gh-btn, .hero-unit .github-btn-large .gh-count {
+    padding: 2px 10px 2px 8px !important;
+    font-size: 15px !important;
+}
+.hero-unit .btn-large {
+    padding: 3px 10px 3px 6px;
+    line-height: 22px;
+}
+.hero-unit .stitched {
+     outline: 1px dashed #444;
+     outline-offset: -5px;
+     background: #2B2B2B;
+     border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius:4px;
+}
+
+/* Section */
+.section {
+    background: white;
+    margin: -20px -20px 35px -20px;
+    padding:19px;
+    border:1px solid #DDD;
+   /* box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    -moz-box-shadow:0 5px 10px rgba(0,0,0,0.3);*/
+}
+.section.no-bg {background:transparent; border:none;margin-top:0; margin-bottom:20px;}
+.section.no-bg p{text-shadow: 0 1px 0 white;}
+.section.no-bg .carousel p, .section.no-bg .carousel-control{text-shadow: 0 1px 0 rgba(0,0,0,0.5);}
+
+.section.gray {
+    color: gray;
+    text-shadow: 0 1px 0 white;
+    background:#fcfcfc url("/img/lightgray-textured-bg.png") repeat 0 0;
+    border-top:1px solid #EEE;
+    box-shadow: inset 0 5px 5px #D9D9D9;
+    -webkit-box-shadow: inset 0 5px 5px #D9D9D9;
+    -moz-box-shadow: inset 0 5px 5px #D9D9D9;
+}
+hr {border-top:1px solid #D9D9D9;}
+
+/* Sidebar */
+.sidebar.span3 ul.nav-tabs {width:100%;}
+
+/* Carousel */
+.carousel-caption {
+background: #666;
+background: rgba(0, 0, 0, 0.5);
+}
+.carousel-control {top:45%;font-size:50px;}
+.section .carousel {margin-top:18px;}
+.carousel-inner, .content{
+    border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius:4px;
+}
+.section .carousel-inner {
+    background-color:white;
+    border:5px solid white;
+    text-shadow:none;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+.hero-unit .carousel-inner {
+    border:5px solid #777;
+}
+.carousel p {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 18px;
+}
+.carousel img {max-width:100%;}
+
+
+/* Thimbnails */
+.thumbnails-gray .thumbnail {background:#E9E9E9;}
+.dev-quotes .thumbnail img {height:40px; width:40px; }
+.dev-quotes .thumbnails, .media-quotes .thumbnails {margin-right:10px;}
+
+/* Caret divider */
+.caret-container {position:relative;}
+.caret-divider {
+  position: absolute;
+  top: 0px;
+  left: 38px;
+  width: 16px;
+  height: 8px;
+}
+.well~.caret-container .caret-divider {top:-21px;}
+.caret-divider .caret-outer, .caret-divider .caret-inner {
+  position: absolute;
+  width: 0;
+  height: 0;
+  vertical-align: text-bottom;
+  border-style: solid;
+}
+.caret-divider .caret-outer {
+  border-top: 8px solid #EEE;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid transparent;
+  top: 0px;
+  left: 0;
+  z-index: 10;
+}
+.caret-divider .caret-inner {
+  border-top: 7px solid whiteSmoke;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 7px solid transparent;
+  top: 0px;
+  left: 1px;
+  z-index: 11;
+}
+
+
+/*Footer*/
+.footer {
+    background: #151515 url("/img/texture-grunge-black-tile.png") repeat-x bottom left;
+    padding: 20px 0 10px 0;
+    box-shadow: inset 0 15px 10px rgba(0,0,0,0.6);
+    -webkit-box-shadow: inset 0 15px 10px rgba(0,0,0,0.6);
+    -moz-box-shadow:inset 0 15px 10px rgba(0,0,0,0.6);
+}
+.footer h5 {color:#DDD;}
+.footer li {line-height:24px;}
+.footer a {color:#808080;}
+.footer img {width:18px; height:18px;vertical-align: middle;margin: 0 2px;}
+
+/* Footer bottom */
+.footer.footer-btm {
+    background:#151515;
+    border-top: 1px solid #222;
+    padding: 10px 0 5px 0;
+}
+.footer.footer-btm {color:#555;}
+
+/* Apps */
+header.app_header {
+    clear:both;
+    display: block;
+    border-top: 1px solid #EEE;
+    position: relative;
+    margin: 20px 0 30px 0;
+}
+header.app_header h2 {
+    background: white;
+    display: inline-block;
+    position: absolute;
+    top: -20px;
+    left:0;
+    padding-right: 5px;
+}
+.opalang_apps_table_highlighted, .opalang_apps_table_listed, .opalang_apps_table_hidden {
+    position:relative;
+ /* border-top: 1px solid #EEE;
+    border-left: 1px solid #EEE;*/
+}
+.opalang_apps_table_highlighted article, .opalang_apps_table_listed article, .opalang_apps_table_hidden article {
+    display: block;
+    position:relative;
+    height: 120px;
+   /* border-top: 1px solid white;
+    border-bottom: 1px solid #EEE;
+    border-right: 1px solid #EEE;
+    border-left: 1px solid white;*/
+}
+.opalang_apps_table_highlighted article:nth-child(4n+1), 
+.opalang_apps_table_highlighted article:nth-child(4n+2), 
+.opalang_apps_table_listed article:nth-child(4n+1),
+.opalang_apps_table_listed article:nth-child(4n+2)
+{/*background-color:#F9F9F9;*/}
+
+img.opalang_apps_screenshot {
+    width: 91px;
+    height: 91px;
+}
+.opalang_apps .opalang_apps_content {
+    display:block;
+    height:100px;
+    margin-left:110px;
+}
+.opalang_apps_title {
+    margin: 0;
+}
+.opalang_apps_title a {color:#404040;}
+.opalang_apps .opalang_apps_category  {
+    color:#aaa;
+}
+.opalang_apps_descr {
+    font-size: 12px; 
+    line-height:15px; 
+    height:47px;
+    overflow:hidden;
+}
+.opalang_apps .opalang_apps_source a {
+    font-size:12px;
+}
+
+.opalang_apps_actions {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.opalang_apps_author {display:none;} /*fixme*/
+
+#opalang_apps_add_admin {clear:both;}
+
+/*Tabs*/
+.wtabs_bars:after {clear: both;}
+
+/* Builds table */
+.wtabs_container div.active {display:block;clear:both;}
+.wtabs_container div.inactive {display:none;}
+
+table tr.stable_release td, table tr.regular_release td {vertical-align:middle;}
+table tr.stable_release td a, table tr.regular_release td a { display: block; width: 100%; height: 100%; }
+tr.regular_release .ubuntu_build, tr.regular_release .linux_build, 
+tr.regular_release .mac_build, tr.regular_release .windows_build {width:24px; height:24px; background-size:100% 100%}
+.ubuntu_build,.linux_build, .mac_build, .windows_build {width:48px; height:48px; display:inline-block;vertical-align:middle;}
+.ubuntu_build {background:url("/img/ubuntu-48x48.png") no-repeat center center;}
+.linux_build {background:url("/img/linux-48x48.png") no-repeat center center;}
+.mac_build {background:url("/img/mac-48x48.png") no-repeat center center;}
+.windows_build {background:url("/img/windows-48x48px.png") no-repeat center center;}
+
+/* Login window */
+.login-window .content {margin-top:40px;}
+form.opalang_loginbox {border-right:1px solid #ddd;}
+.opalang_subscribe_box {margin-top:18px;}
+
+/* Challenge */
+.accordion .content {
+    background: transparent;
+    margin-top: 0px;
+    padding: 0;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow:none;
+}
+.accordion .internal_opa_open, .accordion .internal_opa_close {font-weight:bold;}
+
+/* Twitter feed */
+ul.twitter-search li, ul.twitter-feed li {border-bottom: 1px solid #DDDDDD;padding: 5px 0;}
+ul.twitter-search li:last-child, ul.twitter-feed li:last-child {border:none;}
+ul.twitter-search .tw-name, ul.twitter-search .tw-date, ul.twitter-search .tw-content {margin-left: 60px;}
+.tw-name {font-weight: bold;}
+.tw-date {display:block;color: #AAAAAA;font-size: 11px;}
+.tw-content {font-size: 12px;line-height: 16px;}
+
+
+/* Popup */
+.popup {position:fixed;top:54px;left:0;right:0px;width:100%;text-align:center;}
+.popup .alert {
+    padding-top:10px;
+    padding-bottom:10px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0; 
+    box-shadow: 0 1px 5px black;
+    -webkit-box-shadow: 0 1px 5px black;
+    -moz-box-shadow: 0 1px 5px black;
+}
+.display-none{
+   display:none;   
+}
+/**
+.popup .fade {display:none;}
+.popup .fade.in {display:block;}
+*/
+.popup .alert div, .popup .alert a.btn, .popup .alert iframe {display:inline-block;}
+.popup .alert a.btn, .popup .alert iframe {margin-left:10px;}
+.popup .alert div, .popup .alert iframe {vertical-align:middle;}
+
+/* Quotes */
+#quotes ul {list-style: none;}
+#quotes ul li {display:block; margin-top:-1px;position:relative;}
+#quotes ul li.selected h5 {opacity:1;}
+#quotes ul li h5 {opacity:0.5;height:40px;position:relative;margin:5px auto 0 auto;}
+#quotes .caret-container .caret-divider {left:50%; margin-left:-8px;}
+#quotes #quote-content {margin-bottom:0;}
+#quotes #quote-content p {font-size:16px;margin-bottom:0;}
+#quotes #quote-content a {color:#777;}
+#quotes #quote-content a:hover {color:#444;text-decoration:none;}
+.replace {
+    display: block;
+    overflow: hidden;
+    text-indent: -999em;
+    background: url("/img/quote-logos-sprite.png") no-repeat;
+}
+#quotes .quote-drdobbs{width:105px; left:0; background-position:-15px -8px;}
+#quotes .quote-javaworld{width:110px; left:0; background-position:-137px -8px;}
+#quotes .quote-infoworld{width:105px; left:0; background-position:-266px -8px;}
+#quotes .quote-infoq{width:70px; left:0; background-position:-392px -8px;}
+#quotes .quote-webappers{width:115px; left:0; background-position:-483px -8px;}
+#quotes .quote-lambda{width:195px; left:0; background-position:-610px -8px;}
+#quotes .quote-iprogrammer{width:100px; left:0; background-position:-823px -8px;}
+#quotes ul li .caret-container{display:none;}
+#quotes ul li.selected .caret-container {display:block;}
+
+/* Contributors */
+.cb {
+    background:url("/img/opa-contributors-sprite.png") no-repeat 0 0; 
+    border: 1px solid #aaa;
+    display: inline-block;
+    height: 40px;
+    margin: 5px 10px 5px 0;
+    vertical-align: middle;
+    width: 40px;
+}
+.cb2 {background-position:-40px 0px;}
+.cb3 {background-position:-80px 0px;}
+.cb4 {background-position:-120px 0px;}
+.cb5 {background-position:-160px 0px;}
+.cb6 {background-position:-200px 0px;}
+.cb7 {background-position:-240px 0px;}
+.cb8 {background-position:-280px 0px;}
+.cb9 {background-position:-320px 0px;}
+.cb10 {background-position:-360px 0px;}
+
+.cb11 {background-position: 0px -40px;}
+.cb12 {background-position:-40px -40px;}
+.cb13 {background-position:-80px -40px;}
+.cb14 {background-position:-120px -40px;}
+.cb15 {background-position:-160px -40px;}
+.cb16 {background-position:-200px -40px;}
+.cb17 {background-position:-240px -40px;}
+.cb18 {background-position:-280px -40px;}
+.cb19 {background-position:-320px -40px;}
+.cb20 {background-position:-360px -40px;}
+
+.cb21 {background-position: 0px -80px;}
+.cb22 {background-position:-40px -80px;}
+.cb23 {background-position:-80px -80px;}
+.cb24 {background-position:-120px -80px;}
+.cb25 {background-position:-160px -80px;}
+.cb26 {background-position:-200px -80px;}
+.cb27 {background-position:-240px -80px;}
+.cb28 {background-position:-280px -80px;}
+.cb29 {background-position:-320px -80px;}
+.cb30 {background-position:-360px -80px;}
+
+.cb31 {background-position: 0px -120px;}
+.cb32 {background-position:-40px -120px;}
+.cb33 {background-position:-80px -120px;}
+.cb34 {background-position:-120px -120px;}
+.cb35 {background-position:-160px -120px;}
+.cb36 {background-position:-200px -120px;}
+.cb37 {background-position:-240px -120px;}
+.cb38 {background-position:-280px -120px;}
+.cb39 {background-position:-320px -120px;}
+.cb40 {background-position:-360px -120px;}
+
+.cb41 {background-position: 0px -160px;}
+.cb42 {background-position:-40px -160px;}
+.cb43 {background-position:-80px -160px;}
+.cb44 {background-position:-120px -160px;}
+.cb45 {background-position:-160px -160px;}
+.cb46 {background-position:-200px -160px;}
+.cb47 {background-position:-240px -160px;}
+.cb48 {background-position:-280px -160px;}
+.cb49 {background-position:-320px -160px;}
+.cb50 {background-position:-360px -160px;}
+
+.cb51 {background-position: 0px -200px;}
+.cb52 {background-position:-40px -200px;}
+.cb53 {background-position:-80px -200px;}
+
+.cb91 {background-position: 0px -360px;}
+.cb92 {background-position:-40px -360px;}
+.cb93 {background-position:-80px -360px;}
+.cb94 {background-position:-120px -360px;}
+.cb95 {background-position:-160px -360px;}
+
+
+/* Landscape phone to portrait tablet*/
+@media (max-width: 768px) {
+    .dev-quotes .well, .media-quotes .well {clear:both;}
+    .footer, .hero-unit {
+        margin-left:-20px;
+        margin-right:-20px;
+        padding-left:20px;
+        padding-right:20px;
+    }
+}
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 980px) {
+    .dev-quotes .well, .media-quotes .well {min-height:80px;}
+}
+/* Large desktop */
+@media (min-width: 1200px) {
+    .media-quotes .well {min-height:60px;}
+}
+#__internal__log{ margin-top: 100px }
+
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin-top:0in;
+	mso-para-margin-right:0in;
+	mso-para-margin-bottom:10.0pt;
+	mso-para-margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-ascii-font-family:Cambria;
+	mso-ascii-theme-font:minor-latin;
+	mso-hansi-font-family:Cambria;
+	mso-hansi-theme-font:minor-latin;}
+</style>
+<![endif]-->
+<meta http-equiv=Content-Style-Type content="text/css">
+<meta name=CocoaVersion content=949.54>
+<meta http-equiv=Content-Style-Type content="text/css">
+<meta name=CocoaVersion content=949.54>
+
+
+
+
+
 </head>
-<body>
- 
-	<h1>
-		Treating UI Widgets Like State Machines
-	</h1>
- 
- 
-	<!-- BEGIN: Menu Widget. -->
-	<div class="menu">
- 
-		<a href="#" class="header">
-			My Awesome Friends
-		</a>
- 
-		<ol class="items">
-			<li class="item">
-				Anna Banana
-			</li>
-			<li class="item">
-				Joanna
-			</li>
-			<li class="item">
-				Tricia
-			</li>
-		</ol>
- 
-	</div>
-	<!-- END: Menu Widget. -->
- 
- 
- 
-	<!-- Include JavaScript library. -->
-	<script type="text/javascript" src="./jquery-1.6.1.js"></script>
-	<script type="text/javascript">
- 
-		// Create a sandbox for our menu widget controller.
-		(function( $, menu ){
- 
- 
-			// Cache DOM references for later use.
-			var dom = {};
-			dom.stage = $( document );
-			dom.menu = menu;
-			dom.header = dom.menu.find( "> a.header" );
-			dom.items = dom.menu.find( "> ol.items" );
- 
- 
-			// This is the current state of the widget. Once the
-			// states are defined, this will be further set.
-			var currentState = null;
- 
- 
-			// I fascilitate the transition from the current to
-			// the target state.
-			var gotoState = function( newState ){
- 
-				// Check to see if the current state is available
-				// and has a teardown method:
-				if (
-					currentState &&
-					currentState.teardown
-					){
- 
-					// Teardown the old state.
-					currentState.teardown();
- 
-				}
- 
-				// Check to see if the new state has a setup method.
-				if (newState.setup){
- 
-					// Setup the new state.
-					newState.setup()
- 
-				}
- 
-				// Store the new state.
-				currentState = newState;
- 
-			};
- 
- 
-			// Define the states for this widget. Each state is going
-			// to have a setup and teardown state.
- 
- 
-			// ---------------------------------------------- //
-			// ---------------------------------------------- //
- 
- 
-			var inDefault = {
- 
-				// I am the description of the state (mostly for
-				// debugging and documentation).
-				description: "I am the state in which only the menu header appears.",
- 
- 
-				// I am a short-hand GOTO function. This method can
-				// be passed off to event handlers without scoping
-				// problems.
-				gotoState: function(){
- 
-					// Put widget into this state.
-					gotoState( inDefault );
- 
-				},
- 
- 
-				// I setup the current state.
-				setup: function(){
- 
-					// Add a mouse-enter event for the menu. When the
-					// user mouses over the header, we need to put
-					// the menu into the Hover state.
-					dom.menu.mouseenter( inHover.gotoState );
- 
-				},
- 
- 
-				// I teardown the current state.
-				teardown: function(){
- 
-					// Remove the mouse-enter event.
-					dom.menu.unbind( "mouseenter" );
- 
-				}
- 
-			};
- 
- 
-			// ---------------------------------------------- //
-			// ---------------------------------------------- //
- 
- 
-			var inHover = {
- 
-				// I am the description of the state (mostly for
-				// debugging and documentation).
-				description: "I am the state in which the user has moused-over the header of the menu, but the menu has now shown yet.",
- 
- 
-				// I am a short-hand GOTO function. This method can
-				// be passed off to event handlers without scoping
-				// problems.
-				gotoState: function(){
- 
-					// Put widget into this state.
-					gotoState( inHover );
- 
-				},
- 
- 
-				// I setup the current state.
-				setup: function(){
- 
-					// Change the menu class.
-					dom.menu.addClass( "menuInHover" );
- 
-					// Add a mouse-leave event for the menu. When
-					// the user mouses out of the menu, we need to
-					// put it back into the Default state.
-					dom.menu.mouseleave( inDefault.gotoState );
- 
-					// Add a click handler to show the menu items.
-					dom.header.click(
-						function( event ){
- 
-							// Kill the default behavior - this isn't
-							// a "real" link.
-							event.preventDefault();
- 
-							// Goto to the active tate.
-							gotoState( inActive );
- 
-						}
-					);
- 
-				},
- 
- 
-				// I teardown the current state.
-				teardown: function(){
- 
-					// Change the menu class.
-					dom.menu.removeClass( "menuInHover" );
- 
-					// Remove the mouse-leave event.
-					dom.menu.unbind( "mouseleave" );
- 
-					// Remove the click event.
-					dom.header.unbind( "click" );
- 
-				}
- 
-			};
- 
- 
-			// ---------------------------------------------- //
-			// ---------------------------------------------- //
- 
- 
-			var inActive = {
- 
-				// I am the description of the state (mostly for
-				// debugging and documentation).
-				description: "I am the state in which the user has clicked on the menu and the menu items have been shown. At this point, menu items can be clicked for fun and profit.",
- 
- 
-				// I am a short-hand GOTO function. This method can
-				// be passed off to event handlers without scoping
-				// problems.
-				gotoState: function(){
- 
-					// Put widget into this state.
-					gotoState( inActive );
- 
-				},
- 
- 
-				// I setup the current state.
-				setup: function(){
- 
-					// Change the menu class.
-					dom.menu.addClass( "menuInActive" );
- 
-					// Now that the menu is shown, let's use a click
-					// event on the state to trigger the exiting of
-					// this state (rather than a mouseleave).
-					dom.stage.mousedown(
-						function( event ){
- 
-							// Get a reference to the target item.
-							var target = $( event.target );
- 
-							// Check to make sure that the click did
-							// not occur INSIDE the menu. If it did,
-							// then we don't want to do anything.
-							if (!target.closest( "div.menu" ).length){
- 
-								// Click was OUTSIDE the menu. Go
-								// back to the default state.
-								gotoState( inDefault );
- 
-							}
- 
-						}
-					);
- 
-					// Add a click handler to hide the menu items.
-					dom.header.click(
-						function( event ){
- 
-							// Kill the default behavior - this isn't
-							// a "real" link.
-							event.preventDefault();
- 
-							// Go back to the hover tate.
-							gotoState( inHover );
- 
-						}
-					);
- 
-					// Delegate the click items on the menu to listen
-					// for clicks to individual items.
-					dom.items.delegate(
-						"li.item",
-						"click",
-						function( event ){
- 
-							// Log for proof.
-							console.log(
-								"Clicked:",
-								$.trim( $( this ).text() )
-							);
- 
-						}
-					);
- 
-				},
- 
- 
-				// I teardown the current state.
-				teardown: function(){
- 
-					// Change the menu class.
-					dom.menu.removeClass( "menuInActive" );
- 
-					// Remove the mouse listener from the stage.
-					dom.stage.unbind( "mousedown", inDefault.gotoState );
- 
-					// Remove the click handler on the header.
-					dom.header.unbind( "click" );
- 
-					// Undelegate the click event for menu items.
-					dom.items.undelegate( "li.item", "click" );
- 
-				}
- 
-			};
- 
- 
-			// ---------------------------------------------- //
-			// ---------------------------------------------- //
-			// ---------------------------------------------- //
-			// ---------------------------------------------- //
- 
- 
-			// To start with, put the menu into the default state.
-			gotoState( inDefault );
- 
- 
-		})( jQuery, jQuery( "div.menu" ) );
- 
-	</script>
- 
+
+<body bgcolor=white lang=EN-US style='tab-interval:.5in'>
+
+
+<div class="inset1">
+<div style='width:30%'>
+<h2>Java Script Debugger</h2>
+<p>
+One of the problems that makes debugging hard and slow is making logs and deleting them afterward.
+</p>
+<p>
+which is why i decided to make a method that can surve that purpose for us.
+</p>
+</div>
+<pre style='background-color: #333; width:65%; float:right;'> 
+_.mixin({ 
+
+  makeLogging : <span style=' color:skyBlue;'>function</span>(f,functionName){ 
+    <span style=' color:#AEAEAE;'>// This logging has two mode, printing while executing</span> 
+    <span style=' color:#AEAEAE;'>// which would be the lg prints or the Log array which </span> 
+    <span style=' color:#AEAEAE;'>// we can print them out using outputLog, all at once</span> 
+    <span style=' color:skyBlue;'>var</span> log = [];             
+    <span style=' color:skyBlue;'>function</span> wrapper(){ 
+      lg(functionName + <span style=' color:#E28964;'>" function has been called."</span>);    
+      <span style=' color:skyBlue;'>if</span>(_.isEmpty(arguments)){lg(<span style=' color:#E28964;'>"There is no parameter passed"</span>);} 
+      <span style=' color:skyBlue;'>else</span> {lg(<span style=' color:#E28964;'>"Parameters in this function are :"</span>);console.log(arguments);}         
+      log.push(arguments); 
+      <span style=' color:skyBlue;'>var</span> returned = f.apply(<span style=' color:skyBlue;'>this</span>,arguments);
+      <span style=' color:skyBlue;'>if</span>(_.isEmpty(returned))lg(functionName + <span style=' color:#E28964;'>" function won't return anything."</span>); 
+      <span style=' color:skyBlue;'>else</span> {lg(functionName + <span style=' color:#E28964;'>" function returns : "</span>);console.log(returned);} 
+      <span style=' color:skyBlue;'>return</span> returned; 
+    } 
+    wrapper.outputLog = <span style=' color:skyBlue;'>function</span>() { 
+      _.each(Log,<span style=' color:skyBlue;'>function</span>(args){ lg(<span style=' color:#E28964;'>"arguments are :"</span>);lg(args);}) 
+        } 
+    <span style=' color:skyBlue;'>return</span> wrapper; 
+  }, 
+
+  logDecorate : <span style=' color:skyBlue;'>function</span>(_this){ 
+    <span style=' color:skyBlue;'>var</span> objs = _this.__proto__;     
+    <span style=' color:skyBlue;'>var</span> objNames = Object.getOwnPropertyNames(_this.__proto__);
+    <span style=' color:skyBlue;'>for</span> (<span style=' color:skyBlue;'>var</span> index=<span style=' color:#E28964;'>0</span>; index&lt;objNames.length; index++){ 
+      <span style=' color:skyBlue;'>if</span>(_.isFunction(objs[objNames[index]])) 
+      { 
+        _this[objNames[index]] = <span style=' color:skyBlue;'>this</span>.makeLogging(objs[objNames[index]],objNames[index]);
+      }         
+    } 
+  } 
+}); 
+</pre>
+
+</div>
+
+
 </body>
+
 </html>
