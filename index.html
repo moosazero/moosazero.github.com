@@ -13,6 +13,53 @@
 
 <body>
 
+<div class="inset1">
+<div style='width:30%'>
+<h2>Java Script Debugger</h2>
+<p>
+One of the problems that makes debugging hard and slow is making logs and deleting them afterward.
+</p>
+<p>
+which is why i decided to make a method that can surve that purpose for us.
+</p>
+</div>
+<pre style='background-color: #333; width:65%; float:right;'> 
+_.mixin({ 
+
+  makeLogging : <span style=' color:skyBlue;'>function</span>(f,functionName){ 
+    <span style=' color:#AEAEAE;'>// This logging has two mode, printing while executing</span> 
+    <span style=' color:#AEAEAE;'>// which would be the lg prints or the Log array which </span> 
+    <span style=' color:#AEAEAE;'>// we can print them out using outputLog, all at once</span> 
+    <span style=' color:skyBlue;'>var</span> log = [];             
+    <span style=' color:skyBlue;'>function</span> wrapper(){ 
+      lg(functionName + <span style=' color:#E28964;'>" function has been called."</span>);    
+      <span style=' color:skyBlue;'>if</span>(_.isEmpty(arguments)){lg(<span style=' color:#E28964;'>"There is no parameter passed"</span>);} 
+      <span style=' color:skyBlue;'>else</span> {lg(<span style=' color:#E28964;'>"Parameters in this function are :"</span>);console.log(arguments);}         
+      log.push(arguments); 
+      <span style=' color:skyBlue;'>var</span> returned = f.apply(<span style=' color:skyBlue;'>this</span>,arguments);
+      <span style=' color:skyBlue;'>if</span>(_.isEmpty(returned))lg(functionName + <span style=' color:#E28964;'>" function won't return anything."</span>); 
+      <span style=' color:skyBlue;'>else</span> {lg(functionName + <span style=' color:#E28964;'>" function returns : "</span>);console.log(returned);} 
+      <span style=' color:skyBlue;'>return</span> returned; 
+    } 
+    wrapper.outputLog = <span style=' color:skyBlue;'>function</span>() { 
+      _.each(Log,<span style=' color:skyBlue;'>function</span>(args){ lg(<span style=' color:#E28964;'>"arguments are :"</span>);lg(args);}) 
+        } 
+    <span style=' color:skyBlue;'>return</span> wrapper; 
+  }, 
+
+  logDecorate : <span style=' color:skyBlue;'>function</span>(_this){ 
+    <span style=' color:skyBlue;'>var</span> objs = _this.__proto__;     
+    <span style=' color:skyBlue;'>var</span> objNames = Object.getOwnPropertyNames(_this.__proto__);
+    <span style=' color:skyBlue;'>for</span> (<span style=' color:skyBlue;'>var</span> index=<span style=' color:#E28964;'>0</span>; index&lt;objNames.length; index++){ 
+      <span style=' color:skyBlue;'>if</span>(_.isFunction(objs[objNames[index]])) 
+      { 
+        _this[objNames[index]] = <span style=' color:skyBlue;'>this</span>.makeLogging(objs[objNames[index]],objNames[index]);
+      }         
+    } 
+  } 
+}); 
+</pre>
+
 <div id="menu-container">
 
 <ul id="navigationMenu">
