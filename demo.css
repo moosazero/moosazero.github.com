@@ -92,24 +92,10 @@ width: 900px;
 height: 95px;
 margin: 0 auto;
 }
-#menu ul {
+#menu1 ul {
 margin: 0;
 padding-left: 20px;
 list-style: none;
-}
-#menu li {
-display: inline;
-float:none;
-}
-#menu a {
-display: block;
-float: left;
-height: 34px;
-padding: 16px 30px 0 40px;
-text-decoration: none;
-text-transform: uppercase;
-font-size: 16px;
-color: #4E515B;
 }
 
 
