@@ -11,7 +11,8 @@ body{
 	color:#51555C;
 	height:100%;
 	font-size:12px;
-	font:15px helvetica,arial,freesans,clean,sans-serif
+	font:15px helvetica,arial,freesans,clean,sans-serif;
+  background-color: #F3F1E5;
 }
 
 /* Navigation menu styles */
@@ -66,6 +67,8 @@ ul li a:visited{
 width: 900px;
 height: 220px;
 margin: 0 auto;
+background:url(img/header.jpg) repeat-x #eeeeee;
+
 }
 #header-wrapper h1 {
 margin: 0;
