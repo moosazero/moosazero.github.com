@@ -1,83 +1,85 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>A Stylish Navigation Menu With Jquery</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>A Stylish Navigation Menu With Jquery</title>
 
-<link rel="stylesheet" type="text/css" href="demo.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-<script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+  </head>
+  <body>
+    <div id="outer-wrapper">
+      <div id="header-wrapper">
+      </div>
+      <div id="menu">
+        <ul id="navigationMenu">
+          <li><a href="#" class="normalMenu">Home</a></li>
+          <li><a href="#" class="normalMenu">About Me</a></li>
+        </ul>
+      </div>
+      <div id="center">
+        <div id="content-wrapper">
+          <div id="sidebar-wrapper">
+            <div class="sidebar section" id="sidebar">
+            </div>
+          </div>
+          <div id="main-wrapper">
+            <div class="main section" id="main">
+              <div class="inset1">
+                <div style='width:30%'>
+                  <h2>Java Script Debugger</h2>
+                  <p>
+                    One of the problems that makes debugging hard and slow is making logs and deleting them afterward.
+                  </p>
+                  <p>
+                    which is why i decided to make a method that can surve that purpose for us.
+                  </p>
+                </div>
+                <pre style='background-color: #333; width:65%; float:right;'> 
+                  _.mixin({ 
 
+                  makeLogging : <span style=' color:skyBlue;'>function</span>(f,functionName){ 
+                  <span style=' color:#AEAEAE;'>// This logging has two mode, printing while executing</span> 
+                  <span style=' color:#AEAEAE;'>// which would be the lg prints or the Log array which </span> 
+                  <span style=' color:#AEAEAE;'>// we can print them out using outputLog, all at once</span> 
+                  <span style=' color:skyBlue;'>var</span> log = [];             
+                  <span style=' color:skyBlue;'>function</span> wrapper(){ 
+                  lg(functionName + <span style=' color:#E28964;'>" function has been called."</span>);    
+                  <span style=' color:skyBlue;'>if</span>(_.isEmpty(arguments)){lg(<span style=' color:#E28964;'>"There is no parameter passed"</span>);} 
+                  <span style=' color:skyBlue;'>else</span> {lg(<span style=' color:#E28964;'>"Parameters in this function are :"</span>);console.log(arguments);}         
+                  log.push(arguments); 
+                  <span style=' color:skyBlue;'>var</span> returned = f.apply(<span style=' color:skyBlue;'>this</span>,arguments);
+                  <span style=' color:skyBlue;'>if</span>(_.isEmpty(returned))lg(functionName + <span style=' color:#E28964;'>" function won't return anything."</span>); 
+                  <span style=' color:skyBlue;'>else</span> {lg(functionName + <span style=' color:#E28964;'>" function returns : "</span>);console.log(returned);} 
+                  <span style=' color:skyBlue;'>return</span> returned; 
+                  } 
+                  wrapper.outputLog = <span style=' color:skyBlue;'>function</span>() { 
+                  _.each(Log,<span style=' color:skyBlue;'>function</span>(args){ lg(<span style=' color:#E28964;'>"arguments are :"</span>);lg(args);}) 
+                  } 
+                  <span style=' color:skyBlue;'>return</span> wrapper; 
+                  }, 
 
-</head>
-
-<body>
-<div id="div_header"></div>
-<div id="div_body">
-<div id="div_left_menu"></div>
-<div id="div_main_body">
-
-<div id="menu-container">
-
-<ul id="navigationMenu">
-
-<li><a href="#" class="normalMenu">Home</a></li>
-<li><a href="#" class="normalMenu">About Me</a></li>
-
-</ul>
-
-</div>
-
-<div class="inset1">
-<div style='width:30%'>
-<h2>Java Script Debugger</h2>
-<p>
-One of the problems that makes debugging hard and slow is making logs and deleting them afterward.
-</p>
-<p>
-which is why i decided to make a method that can surve that purpose for us.
-</p>
-</div>
-<pre style='background-color: #333; width:65%; float:right;'> 
-_.mixin({ 
-
-  makeLogging : <span style=' color:skyBlue;'>function</span>(f,functionName){ 
-    <span style=' color:#AEAEAE;'>// This logging has two mode, printing while executing</span> 
-    <span style=' color:#AEAEAE;'>// which would be the lg prints or the Log array which </span> 
-    <span style=' color:#AEAEAE;'>// we can print them out using outputLog, all at once</span> 
-    <span style=' color:skyBlue;'>var</span> log = [];             
-    <span style=' color:skyBlue;'>function</span> wrapper(){ 
-      lg(functionName + <span style=' color:#E28964;'>" function has been called."</span>);    
-      <span style=' color:skyBlue;'>if</span>(_.isEmpty(arguments)){lg(<span style=' color:#E28964;'>"There is no parameter passed"</span>);} 
-      <span style=' color:skyBlue;'>else</span> {lg(<span style=' color:#E28964;'>"Parameters in this function are :"</span>);console.log(arguments);}         
-      log.push(arguments); 
-      <span style=' color:skyBlue;'>var</span> returned = f.apply(<span style=' color:skyBlue;'>this</span>,arguments);
-      <span style=' color:skyBlue;'>if</span>(_.isEmpty(returned))lg(functionName + <span style=' color:#E28964;'>" function won't return anything."</span>); 
-      <span style=' color:skyBlue;'>else</span> {lg(functionName + <span style=' color:#E28964;'>" function returns : "</span>);console.log(returned);} 
-      <span style=' color:skyBlue;'>return</span> returned; 
-    } 
-    wrapper.outputLog = <span style=' color:skyBlue;'>function</span>() { 
-      _.each(Log,<span style=' color:skyBlue;'>function</span>(args){ lg(<span style=' color:#E28964;'>"arguments are :"</span>);lg(args);}) 
-        } 
-    <span style=' color:skyBlue;'>return</span> wrapper; 
-  }, 
-
-  logDecorate : <span style=' color:skyBlue;'>function</span>(_this){ 
-    <span style=' color:skyBlue;'>var</span> objs = _this.__proto__;     
-    <span style=' color:skyBlue;'>var</span> objNames = Object.getOwnPropertyNames(_this.__proto__);
-    <span style=' color:skyBlue;'>for</span> (<span style=' color:skyBlue;'>var</span> index=<span style=' color:#E28964;'>0</span>; index&lt;objNames.length; index++){ 
-      <span style=' color:skyBlue;'>if</span>(_.isFunction(objs[objNames[index]])) 
-      { 
-        _this[objNames[index]] = <span style=' color:skyBlue;'>this</span>.makeLogging(objs[objNames[index]],objNames[index]);
-      }         
-    } 
-  } 
-}); 
-</pre>
-</div>
-  
-</div>
-<div id="div_right_menu"></div>
-
-</body>
+                  logDecorate : <span style=' color:skyBlue;'>function</span>(_this){ 
+                  <span style=' color:skyBlue;'>var</span> objs = _this.__proto__;     
+                  <span style=' color:skyBlue;'>var</span> objNames = Object.getOwnPropertyNames(_this.__proto__);
+                  <span style=' color:skyBlue;'>for</span> (<span style=' color:skyBlue;'>var</span> index=<span style=' color:#E28964;'>0</span>; index&lt;objNames.length; index++){ 
+                  <span style=' color:skyBlue;'>if</span>(_.isFunction(objs[objNames[index]])) 
+                  { 
+                  _this[objNames[index]] = <span style=' color:skyBlue;'>this</span>.makeLogging(objs[objNames[index]],objNames[index]);
+                  }         
+                  } 
+                  } 
+                  }); 
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="footer-wrapper">
+      </div>
+    </div>
+  </body>
 </html>
