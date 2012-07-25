@@ -10,6 +10,10 @@ font:300 36px/38px "skolar-1","skolar-2",Georgia,serif;
 font-weight: 300;
 color: #111;
 }
+h2 {
+margin:20px;
+
+}
 body{
 	
 	font-family:Arial, Helvetica, sans-serif;
@@ -23,15 +27,15 @@ body{
 /* Navigation menu styles */
 
 ul{
-	height:25px;
+	height:45px;
 	font-family:Arial, Helvetica, sans-serif;
 	font-size:12px;
 }
 
 ul li{
 	display:inline-block;
-	float:left;
-	height:25px;
+	/*float:left;*/
+	height:45px;
 	list-style-type:none;
 	overflow:hidden;
 }
@@ -40,6 +44,7 @@ ul li a, ul li a:hover,
 ul li a:visited{
 	text-decoration:none;
   font: bold 12px/1.5 Arial, Helvetica, sans-serif;
+  color: #111;
 }
 
 .normalMenu, .normalMenu:visited,
