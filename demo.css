@@ -102,6 +102,10 @@ width: 900px;
 height: 95px;
 margin: 0 auto;
 }
+#navigationMenu li {
+	height:25px;
+
+}
 #menu1 ul {
 margin: 0;
 padding-left: 20px;
@@ -117,11 +121,11 @@ margin: 0 auto;
 float: right;
 width: 620px;
 padding: 0 20px;
-background: url(http://2.bp.blogspot.com/_Zuzii37VUO4/TUeIWK2j8PI/AAAAAAAAEz0/ZpmUPFYlLWg/s000/img4ft7.gif) no-repeat;
+
 }
 #sidebar-wrapper {
 float: left;
 width: 200px;
 padding: 0 20px;
-background: url(http://3.bp.blogspot.com/_Zuzii37VUO4/TUeIWgOlqHI/AAAAAAAAEz4/AUxxwh7GsoY/s000/img3rn8.gif) no-repeat right top;
+
 }
