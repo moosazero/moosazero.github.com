@@ -6,7 +6,7 @@ body,h1,h2,h3,p,td,quote,small,form,input,ul,li,ol,label{
 }
 
 body{
-	margin-top:20px;
+	
 	font-family:Arial, Helvetica, sans-serif;
 	color:#51555C;
 	height:100%;
@@ -65,7 +65,7 @@ ul li a:visited{
 /*-- (Cabecera) --*/
 #header-wrapper {
 /*width: 900px;*/
-height: 220px;
+height: 150px;
 margin: 0 auto;
 /*background:url(img/header.jpg) repeat-x #eeeeee;*/
 background-color: #D9D9D9;
