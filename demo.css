@@ -64,7 +64,7 @@ ul li a:visited{
 
 /*-- (Cabecera) --*/
 #header-wrapper {
-width: 900px;
+/*width: 900px;*/
 height: 220px;
 margin: 0 auto;
 /*background:url(img/header.jpg) repeat-x #eeeeee;*/
