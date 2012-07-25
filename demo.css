@@ -67,8 +67,8 @@ ul li a:visited{
 width: 900px;
 height: 220px;
 margin: 0 auto;
-background:url(img/header.jpg) repeat-x #eeeeee;
-
+/*background:url(img/header.jpg) repeat-x #eeeeee;*/
+background-color: #D9D9D9;
 }
 #header-wrapper h1 {
 margin: 0;
