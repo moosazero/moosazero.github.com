@@ -1,0 +1,105 @@
+
+<html>
+  <head>
+    <title>Footer</title>
+    <link rel="stylesheet" type="text/css" href="styles/main.css" />
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>    
+    <style type="text/css">
+    </style>
+  </head>
+  <body>   
+    <div class="main section" id="main">     
+      <div class="inset1">
+        <div >
+          <h1>Rendering one model at a time</h1>
+          <p>
+            One of the problems that makes debugging hard and slow is making logs and deleting them afterward.
+
+	    One of the most effective ways of debugging is making logs within the code.
+	    Most of the times, if you use enough logs, bugs can be found easily.
+	    One way is tracking the path of execution and injecting logs between lines. Of course after you find the bug you will need to delete all of those.
+	  </p>
+<pre class="brush: js;">
+
+// This object is used when you have collection of models
+// and you want to render them separately.
+// Items in the collection are categorized by their type.
+// the childViewConstructor need to have a getType() function,
+// which returns the type and the rendered element get attached in
+// its category.
+Backbone.UpdatingCollectionView = Backbone.View.extend({
+  initialize : function(options) {
+    _.bindAll(this);
+
+    if (!options.childViewConstructor) {throw "no child view constructor provided";}
+    if (!options.childViewTagName) {throw "no child view tag name provided";}
+    if (!options.childViewTagIdPrefix) {throw "no child view tag id prefix provided";}
+
+    this._childViewConstructor = options.childViewConstructor;
+    this._childViewTagName = options.childViewTagName;
+    this._childViewTagIdPrefix = options.childViewTagIdPrefix;
+    this._childViews = [];
+    this.collection.each(this.add);
+    this.bindEvents();
+  },
+
+  add : function(model) {
+    var childView = new this._childViewConstructor({
+      tagName : this._childViewTagName,
+      model : model
+    });
+    this._childViews.push(childView);
+
+    if (this._rendered) {
+      var type = childView.getType();
+      this.$(this._childViewTagIdPrefix + type).append(childView.render().el);
+    }
+  },
+
+  bindEvents: function() {
+    this.collection.bind('add', this.add);
+    this.collection.bind('remove', this.remove);
+    this.collection.bind('reset', this.reset);
+  },
+
+  redelegateEvents: function() {
+    _.each(this._childViews, function(childView) {
+      childView.redelegateEvents();
+    });
+  },
+
+  remove : function(model) {
+    var viewToRemove = _(this._childViews).select(function(cv) { return cv.model === model; })[0];
+    this._childViews = _(this._childViews).without(viewToRemove);
+    if (this._rendered) {$(viewToRemove.el).remove();}
+  },
+
+  reset: function(collection, options) {
+    $(this.el).empty();
+    this._childViews = [];
+    _.each(collection.models, this.add, this);
+  },
+
+  // this method should gets called after creating UpdatingCollectionView
+  // in order to  render all the elements within the collection
+  render : function() {
+    var _this = this;
+    this._rendered = true;
+    _(this._childViews).each(function(childView) {
+      var type = childView.getType();
+      _this.$(_this._childViewTagIdPrefix + type).append(childView.render().el);
+    });
+    return this;
+  }
+});
+
+</pre>
+        </div>       
+      </div>
+    </div>
+  </body>
+</html>

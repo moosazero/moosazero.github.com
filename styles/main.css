@@ -1,14 +1,26 @@
 /* Page styles */
 
-body,h1,h2,h3,p,td,quote,small,form,input,ul,li,ol,label{
+body{
 	margin:0px;
-	padding:0px;
+	padding:0px; 
+}
+ul,li,ol{
+	margin:1px;
+
+}
+p {
+color: #333;
+font-family: Arial,Helvetica,Sans-Serif;
+font-size: 13px;
+line-height: 19px;
+padding: 10;
 }
 h1 {
 /*font:300 36px/38px "proxima-nova-1","proxima-nova-2","Helvetica Neue",Helvetica,sans-serif;*/
-font:300 36px/38px "skolar-1","skolar-2",Georgia,serif;
-font-weight: 300;
+font:150 36px/38px "skolar-1","skolar-2",Georgia,serif;
+font-weight: 150;
 color: #111;
+padding: 10;
 }
 h2 {
 margin:20px;
@@ -23,7 +35,17 @@ body{
 	/*font:15px helvetica,arial,freesans,clean,sans-serif;*/
   background-color: #F3F1E5;
 }
+.code {
+width: 700px;
+padding: 20px 20px;
 
+}
+.gist-data {
+background-color: skyBlue;
+}
+.gist-syntax {
+background-color: skyBlue;
+}
 /* Navigation menu styles */
 /*
 ul{
@@ -32,20 +54,6 @@ ul{
 	font-size:12px;
 }
 */
-ul li{
-	display:inline-block;
-	/*float:left;*/
-	height:45px;
-	list-style-type:none;
-	overflow:hidden;
-}
-
-ul li a, ul li a:hover, 
-ul li a:visited{
-	text-decoration:none;
-  font: bold 12px/1.5 Arial, Helvetica, sans-serif;
-  color: #111;
-}
 
 #content-wrapper {
 width: 900px;

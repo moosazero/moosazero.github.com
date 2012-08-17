@@ -1,0 +1,117 @@
+
+<html>
+  <head>
+    <title>Footer</title>
+    <link rel="stylesheet" type="text/css" href="styles/main.css" />
+    <script type="text/javascript" src="scripts/shCore.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+    <link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>    
+    <style type="text/css">
+    </style>
+  </head>
+  <body>   
+    <div class="main section" id="main">     
+      <div class="inset1">
+        <div >
+          <h1>Java Script Debugger</h1>
+          <p>
+            One of the problems that makes debugging hard and slow is making logs and deleting them afterward.
+
+	    One of the most effective ways of debugging is making logs within the code.
+	    Most of the times, if you use enough logs, bugs can be found easily.
+	    One way is tracking the path of execution and injecting logs between lines. Of course after you find the bug you will need to delete all of those.
+	  </p><p>
+	    Logs can be very useful in:
+	    <ul>
+	      <li>At the beginning of each method to show that it is being executed.</li>
+	      <li>Logging parameters that being passed to the method to make sure they are filled with what we expect.</li>
+	      <li>Method return value (If any)</li>
+	    </ul>
+	  </p>
+	    <pre class="brush: js;">
+ function add(a,b) 
+ { 
+   console.log(“inside add method”);
+   console.log(“parameters are”+ a +” and ” + b);
+   var x = a + b;
+   alert(x);
+   console.log(“return value ” + x);
+   return x;
+}
+	    </pre>
+	  <p>
+This procedure can be very time consuming; it would be great if we could have all of these logs without changing the code.
+Which is why I decided to write a method to make this procedure easier.
+You just need to call _.logDecorate(<Object>) and all the functions inside the object would have logs.
+As you can see I added this method to underscore.js library.
+
+
+          </p>
+          <script type="syntaxhighlighter" class="brush: js;">
+
+_.mixin({
+
+  makeLogging : function(f,functionName){
+    // This logging has two mode, printing while executing
+    // which would be the lg prints or the Log array which
+    // we can print them out using outputLog, all at once
+    var log = [];
+    function wrapper(){
+      lg("'" + functionName + "'");
+      if(_.isEmpty(arguments)){lg("No parameter");}
+      else {lg("Parameters :");console.log(arguments);}
+      log.push(arguments);
+      var returned = f.apply(this,arguments);
+      if(_.isEmpty(returned)) {lg(functionName + " has no return.");}
+      else {lg(functionName + "  returns : ");console.log(returned);}
+
+      return returned;
+    }
+    wrapper.outputLog = function() {
+      _.each(log,function(args){ lg("arguments are :");lg(args);});
+    };
+    return wrapper;
+  },
+
+  logDecorate : function(_this){
+    var objs = _this.__proto__;
+    var objNames = Object.getOwnPropertyNames(_this.__proto__);
+    for (var index=0; index<objNames.length; index++){
+      if(_.isFunction(objs[objNames[index]]))
+      {
+        _this[objNames[index]] = this.makeLogging(objs[objNames[index]],objNames[index]);
+      }
+    }
+  }
+});
+					     </script>
+	  <p>
+lg function is a safer version of console.log, since console.log causes problem on IE.
+	  </p>
+	  <pre class="brush: js;">
+
+function lg(s) {
+  if (typeof(console) === "undefined" ||
+      typeof(console.log) === "undefined" ||
+      typeof(console.log.apply) === "undefined")
+  {return;}
+
+  if (typeof(s) === "object") {
+    try{
+      console.log(JSON.stringify(s));
+    }
+    catch(e){
+      console.log(s);
+    }
+  } else {
+    console.log.apply(console, arguments);
+  }
+}
+	  </pre>
+        </div>       
+      </div>
+    </div>
+  </body>
+</html>
