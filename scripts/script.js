@@ -1,21 +1,4 @@
-$(document).ready(function(){
-
-	$('#navigationMenu li .normalMenu').each(function(){
-
-		$(this).before($(this).clone().removeClass().addClass('hoverMenu'));
-
-	});
-	
-	$('#navigationMenu li').hover(function(){
-	
-		$(this).find('.hoverMenu').stop().animate({marginTop:'0px'},200);
-
-	},
-	
-	function(){
-	
-		$(this).find('.hoverMenu').stop().animate({marginTop:'-25px'},200);
-
-	});
-	
-});
+function set_menu(menu){
+var menu_item = document.getElementsByClassName(menu);
+if (menu_item) menu_item[0].parentNode.className += 'selected';
+}

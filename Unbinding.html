@@ -1,21 +1,30 @@
-
+<!DOCTYPE HTML>
 <html>
-  <head>
-    <title>Footer</title>
-    <link rel="stylesheet" type="text/css" href="styles/main.css" />
-    <script type="text/javascript" src="scripts/shCore.js"></script>
-    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
-    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
-    <link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
-    <script type="text/javascript">SyntaxHighlighter.all();</script>    
-    <style type="text/css">
-    </style>
-  </head>
-  <body>   
-    <div class="main section" id="main">     
-      <div class="inset1">
-        <div >
-          <h1>Unbinding Events from backbone</h1>
+
+<head>
+  <title>simplestyle_4 - a page</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <script type="text/javascript" src="scripts/shCore.js"></script>
+  <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+  <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+  <link type="text/css" rel="stylesheet" href="style/shCoreDefault.css"/>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>    
+ 
+</head>
+
+<body>
+  <div id="main">
+      <script type="text/javascript" src="header.js"></script>
+    <div id="content_header"></div>
+    <div id="site_content">
+      <div id="sidebar_container">
+         <script type="text/javascript" src="sidebar.js"></script>
+      </div>
+      <div id="content">
+       <h1>Unbinding Events from backbone</h1>
           <p>
 One of the problems that happens using backbone is when you create new view and bind it to some event, after you destroy your view, those events are still binded to the view.
 This will make unnecessary usage of your memory and even worse than that it will cause some bugs that are hard to find. 
@@ -76,16 +85,23 @@ var SampleView = BaseView.extend({
     }
 });
 </pre>
-<p>
+       <p>
 After you are done with your view you can unbind them with:
-</p>
+       </p>
 <pre class="brush: js;">
   var sampleView = new SampleView({model: some_model, collection: some_collection});
   sampleView.dispose();
 </pre>
-<p>You can find refrence and also other methods in <a target="_blank" href="http://stackoverflow.com/questions/7567404/backbone-js-repopulate-or-recreate-the-view">Here</a></p>
-        </div>       
+       <p>You can find refrence and also other methods in 
+	 <a target="_blank" href="http://stackoverflow.com/questions/7567404/backbone-js-repopulate-or-recreate-the-view">
+	   Here
+	 </a>
+       </p>
       </div>
     </div>
-  </body>
+    <div id="content_footer"></div>
+     <script type="text/javascript" src="footer.js"></script>
+     
+  </div>
+</body>
 </html>

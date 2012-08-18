@@ -1,21 +1,30 @@
-
+<!DOCTYPE HTML>
 <html>
-  <head>
-    <title>Footer</title>
-    <link rel="stylesheet" type="text/css" href="styles/main.css" />
-    <script type="text/javascript" src="scripts/shCore.js"></script>
-    <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
-    <script type="text/javascript" src="scripts/shBrushJava.js"></script>
-    <link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
-    <script type="text/javascript">SyntaxHighlighter.all();</script>    
-    <style type="text/css">
-    </style>
-  </head>
-  <body>   
-    <div class="main section" id="main">     
-      <div class="inset1">
-        <div >
-          <h1>Java Script Debugger</h1>
+
+<head>
+  <title>simplestyle_4 - a page</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <script type="text/javascript" src="scripts/shCore.js"></script>
+  <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+  <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+  <link type="text/css" rel="stylesheet" href="style/shCoreDefault.css"/>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>    
+ 
+</head>
+
+<body>
+  <div id="main">
+      <script type="text/javascript" src="header.js"></script>
+    <div id="content_header"></div>
+    <div id="site_content">
+      <div id="sidebar_container">
+         <script type="text/javascript" src="sidebar.js"></script>
+      </div>
+      <div id="content">
+        <h2>Java Script Debugger</h2>
           <p>
             One of the problems that makes debugging hard and slow is making logs and deleting them afterward.
 
@@ -33,11 +42,11 @@
 	    <pre class="brush: js;">
  function add(a,b) 
  { 
-   console.log(â€œinside add methodâ€);
-   console.log(â€œparameters areâ€+ a +â€ and â€ + b);
+   console.log(“inside add method”);
+   console.log(“parameters are”+ a +” and ” + b);
    var x = a + b;
    alert(x);
-   console.log(â€œreturn value â€ + x);
+   console.log(“return value ” + x);
    return x;
 }
 	    </pre>
@@ -110,8 +119,11 @@ function lg(s) {
   }
 }
 	  </pre>
-        </div>       
       </div>
     </div>
-  </body>
+    <div id="content_footer"></div>
+     <script type="text/javascript" src="footer.js"></script>
+     
+  </div>
+</body>
 </html>
