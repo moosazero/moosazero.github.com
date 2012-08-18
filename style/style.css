@@ -98,7 +98,7 @@ ol li
   margin-right: auto;}
 
 #header
-{ background: #323534 url(back.png) repeat-x;
+{ background: #323534 url(back2.png) repeat-x;
   height: 177px;}
 
 #logo
@@ -167,10 +167,10 @@ ul#menu li.selected a
 
 ul#menu li.selected
 { margin: 1px 2px 0 0;
-  background: #00C6F0 url(tab_selected.png) no-repeat 0 0;}
+  background: #D5851C url(tab_selected2.png) no-repeat 0 0;}
 
 ul#menu li.selected a, ul#menu li.selected a:hover
-{ background: #00C6F0 url(tab_selected.png) no-repeat 100% 0;
+{ background: #D5851C url(tab_selected2.png) no-repeat 100% 0;
   color: #FFF;}
 
 ul#menu li a:hover
@@ -236,7 +236,7 @@ ul#menu li a:hover
   height: 80px;
   padding: 28px 0 5px 0;
   text-align: center; 
-  background: #3B3939 url(footer.png) repeat-x;
+  background: #3B3939 url(footer2.png) repeat-x;
   color: #A8AA94;}
 
 #footer p
