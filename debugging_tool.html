@@ -1,0 +1,332 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Debugging Tool</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <script type="text/javascript" src="scripts/shCore.js"></script>
+  <script type="text/javascript" src="scripts/shBrushJScript.js"></script>
+  <script type="text/javascript" src="scripts/shBrushJava.js"></script>
+  <link type="text/css" rel="stylesheet" href="style/shCoreDefault.css"/>
+  <script type="text/javascript">SyntaxHighlighter.all();</script>    
+ 
+</head>
+
+<body>
+  <div id="main">
+      <script type="text/javascript" src="header.js"></script>
+    <div id="content_header"></div>
+    <div id="site_content">
+      <div id="sidebar_container">
+         <script type="text/javascript" src="sidebar.js"></script>
+      </div>
+      <div id="content">
+       <h2>Debugging Tool</h2>
+          <p>
+Some times in the process of developing website, you will need to use some debugging-URLs constantly. Remembering and managing these URL are not easy tasks.
+That’s why I decided to make this debugging tool. It will get an JSON object and create a menu. Menu items are two types
+Items without inputs; after clicking them URL will be visited right away
+Items with Input; after clicking them corresponding form would be open and you can visit URL with specified inputs by submitting the form.
+
+As an example, lets assume we need to test our website for subscribe users as well as guests. So we would have:
+<ul>
+<li>For subscribed user :www.ourwebsite.com/debug/set-status?value=”login”</li>
+<li>For guest user :www.ourwebsite.com/debug/set-status?value=”logout”</li>
+<li>For guest user :www.ourwebsite.com/debug/logout</li>
+</ul>
+	  
+Here is the JSON object
+</p>
+	  <script type="syntaxhighlighter" class="brush: js;">
+	    
+var JSON =
+{"endpoints":[
+{"route":["get","/debug/logout"],"info":"Log out User”,”input-form":null}]},
+{
+"route":["post","debug/set-status"],
+"info":"Sets Status",
+“input-form":[["type",{Value",{"type":"string"}]]},
+{
+"route":["post","debug/set-status"],
+"info":"Sets Status",
+“input-form":[["type",{"choices":["a","b","c"],"type":"string"}],["name",{"type":"string"}]]}
+]}
+
+</script>
+
+<p>
+Here is the debugging tool class
+
+</p>
+  <script type="syntaxhighlighter" class="brush: js;">
+
+
+/** Owner Moosa
+    Debugging Tool gets an JSON object and creates a menu with relative form 
+    Which can finally create and visit debugging URLs.
+    
+    For example if there is a URL like localhost:8001/set-status?value="login"
+    You will have an item in menu with "set-status" titile and by clicking on that
+    you will get a form with "value" input(or select), you can click on submit to visit the URL
+    
+    
+*/
+
+(function(window) {
+
+  function getEventTarget(e) {
+    e = e || window.event;
+    return e.target || e.srcElement;
+  }
+
+  // endpoint contatins the JSON object
+  var Debug_Tool = function(options) {
+    this.options = options;
+    this.endpoint = this.options.endpoint;
+    this.menuMap = {};
+    this.modules = {};
+    
+    
+
+    // In this method we get the JSON object from the endpoint
+    this.getModules = function(endpoint){
+      var _this = this;
+      var jqxhr = $.get(endpoint, function(data) {
+       // data.endpoints[2].route[0]="get"
+        _this.engine(data);
+      })
+        .success(function() { lg("got JSON"); })
+        .error(function(xhr, status, error){ 
+          lg(status);
+          lg(error);
+        });
+    };
+
+    // This method gets JSON file, calls createMenu to create menu and connect listeners to menu
+    this.engine = function(JSON) {
+      var _this = this;
+      var menuHTML =  this.recursive_parse(JSON.endpoints,false,"/api/dev");
+      this.createMenu(menuHTML);
+      $(".jqcontextmenu").click(function(event) {
+        _this.menu_clicked(event);
+      });
+    };
+
+    // 
+    this.menu_clicked = function(event) {
+      var target = getEventTarget(event);
+      var liId = $(target).parent().attr('id');
+      if(liId in this.menuMap) {
+        var Iframe = this.createIFrame(liId);
+        this.openDialog(Iframe);
+      }
+    };
+    
+
+    // This method converts JSON object to select HTML tag 
+    this.recursive_parse = function(result,UlNeeded,base) {
+      var hostURL = window.location.host;
+      var html;
+      if(!_.isEmpty(result)) {
+        html = UlNeeded ? '' : '<ul>';
+        for (var k in result) {
+          var node = result[k];
+          var inputs = node["input-form"];
+          var isSubnav = typeof(result[k].info) === "undefined";
+          base = node.base ? base+ node.base : base;
+          node.route[1] = base+ node.route[1];
+          if (isSubnav)
+          {
+            html = html + this.recursive_parse(node,isSubnav,base) ;
+          } else {
+            var lastIndexInMap = _.size(this.menuMap);
+            this.menuMap["Li_"+ lastIndexInMap]= { info : node.info, route : node.route, inputs : inputs };
+            if((typeof(inputs) !== "undefined") && (inputs) !== null)  {
+              html = html + '<li id="Li_'+lastIndexInMap+'"><a href="#">' + node.info + '</a>';
+            } else {
+              html = html + '<li><a href="' +  node.route[1]  +'">' + node.info + '</a>';
+            }
+            if(node.subnav)
+            {html = html +  this.recursive_parse(node.subnav,isSubnav,base);}
+            html = html + '</li>';
+          }
+        }
+        html = html + (UlNeeded ? '':'</ul>');
+      }
+      
+      return html;
+
+    };
+
+    // This method gets an select HTML tag and creates menu accordingly 
+    this.createMenu = function(menuHTML) {
+
+      $('body').append('<link href="/css/debugging-tool.css" rel="stylesheet" type="text/css" media="all">');
+
+      var wrapper = document.createElement('div');
+      var menuOpener = document.createElement('div');
+      $(menuOpener).text("Debug");
+      $(menuOpener).attr('id','menu_opener');
+      $(menuOpener).addClass('pilot-light');
+      var menu = $(menuHTML);
+      menu.addClass("jqcontextmenu");
+      $(menuOpener).append(menu);
+      $('body').append(menuOpener);
+      $(menuOpener).addcontextmenu('jqcontextmenu');
+
+    };
+    this.addStatusLabel = function(form,error,status){
+      var  element = document.getElementById("labelStatus");
+      if (element) { element.parentNode.removeChild(element);}
+      var labelStatus = document.createElement('label');
+      labelStatus.setAttribute('id','labelStatus');
+      $(labelStatus).css('float','right');
+     
+      if (!error){                     
+        $(labelStatus).text('OK');
+        $(labelStatus).css('color','green');
+        $(form).append($(labelStatus));
+      } else {
+        
+        $(labelStatus).text(status+' '+ error);
+        $(labelStatus).css('color','red');
+        $(form).append($(labelStatus));
+      }
+    };
+    // After clicking on menu containing inputs, generated form would be open.
+    this.openDialog = function(frame) {
+      var _this = this;
+      $(frame).dialog({
+        width : $(window).width()/2,
+        height: $(window).height()/2,
+        buttons: { "Cancel": function() { $(this).dialog("close"); },
+                   "Submit": function() {
+                     var form = this;
+                     $.post($(form).attr('action'), $(form).serialize())
+                       .success(function() {
+                         _this.addStatusLabel(form);  
+                       })
+                       .error(function(xhr, status, error){ 
+                         _this.addStatusLabel(form,status,error);                    
+                       });                   
+                   }
+                 },
+        overlay: {
+          opacity: 0.7,
+          background: "black"
+        }
+      });
+
+    };
+    
+    
+    this.getList = function(endpoint,form){
+      var _this = this;
+      var newElement='';
+      var jqxhr = $.get(endpoint, function(list) {        
+        _.each(list,function(item){
+          newElement += '<p>'+list+'</p>';
+        });
+        $(form).children('div').append(newElement);
+        this.openDialog(form);
+        
+      })
+        .success(function() {  })
+        .error(function() {  });
+    };
+    // This method creates a form to display
+    this.createIFrame = function(inputId) {
+      var inputs = this.menuMap[inputId].inputs;
+      var route = this.menuMap[inputId].route;
+      var info = this.menuMap[inputId].info;
+      var elementNames = _.pluck(inputs,0);
+      
+      var form = document.createElement("form");
+      form.setAttribute('method',route[0]);
+      form.setAttribute('action',route[1]);
+      
+      
+      var div = $(document.createElement("div"));
+      $(div).css("margin-left","20px");
+      $(div).css("margin-top","20px");
+      $(form).append(div);
+      
+      var header = $(document.createElement("h4"));
+      $(header).text(info);
+      $(div).append(header);
+     
+      var newElement = '';            
+      if(route[0] === "post"){
+        
+        _.each(elementNames, function(name,index){
+          var elementType = inputs[index][1].type;
+          newElement += '<div><label>'+name+'('+elementType+')</label>';
+          switch (elementType){
+          case "string":
+            newElement += '<input name="'+name+'" type="text" />';
+            break;
+          case "number":
+            newElement += '<input name="'+name+'" type="text" />';
+            break;
+          case "boolean":
+            newElement +='<select name="'+name+'" ><option>false</option><option>true</option></select>';
+            break;
+          case "JSON":
+            newElement += '<textarea name="'+name+'" > </textarea>';
+            break;
+          case "hidden":
+            newElement += '<input name="'+name+'" type="hidden" />';
+            break;
+          case "select":
+            var choices = inputs[index][1].choices;
+            newElement += '<select name="'+name+'">';
+            _.each(choices, function(choice){newElement += '<option value="'+choice+'">'+choice+'</option>';});
+            newElement += '</select>';
+            break;     
+          default:
+            lg("element Doesn't exist, "+ elementType);
+            
+          }
+          newElement += "</div>";
+
+        });
+        
+      }
+      else{
+        this.getList(route[1],form);
+         return null;
+      }
+      $(div).append(newElement);
+      return form;
+    };
+    this.modules = this.getModules(this.endpoint);
+    
+  };
+  window.Debug_Tool = Debug_Tool;
+
+  debug.enableDebuggingTool = function(){$.cookie("debuggingTool",true);};
+
+  $(document).ready(function() {
+    if ($.cookie("debuggingTool") === "true") {
+      var p = new Debug_Tool({endpoint:'/api/dev/json'});
+    }
+  });
+
+}(window));
+
+</script>
+       <p>
+Debugging tool is not visible by default, you can show it by calling debug.enableDebuggingTool();
+       </p>
+
+      </div>
+    </div>
+    <div id="content_footer"></div>
+     <script type="text/javascript" src="footer.js"></script>
+     
+  </div>
+</body>
+</html>
