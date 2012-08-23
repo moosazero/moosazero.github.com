@@ -26,8 +26,42 @@
       <div id="content">
           <h2>Rendering one model at a time</h2>
           <p>
-           
+           Sometimes you <strong>Do Not</strong> want all the page to be refreshed when a single model changes but if you bind your model to change and then render the whole page, this is ...
 	  </p>
+<p>In this article I want to show you how to bind your model so that changes on one would render only it's own view not the whole page.</p>
+<!--
+<pre class="brush: js;">
+
+    
+    // Commments
+    isChange : function(){
+      var collectionAttributes = _.pluck(accountGroup.models,"attributes");
+      var rfzAttributes = RFZ.models.accounts.attributes.accounts;
+      var rfzIds = _.pluck(rfzAttributes, 'id');
+      var collectionIds = _.pluck(collectionAttributes, 'id');
+      var shareKeys = _.intersection(rfzIds,collectionIds);
+      var addKeys = _.difference(rfzIds,collectionIds);
+      var droppedKeys = _.difference(collectionIds,rfzIds);
+      var rfz_index,collection_index;
+      _.each(shareKeys, function(key){
+        rfz_index = _.indexOf(_.pluck(rfzAttributes,'id'),key);
+        collection_index = _.indexOf(_.pluck(collectionAttributes,'id'),key);
+        var equal = _.isEqual(accountGroup.at(collection_index).attributes,rfzAttributes[rfz_index]);
+        if (!equal) {accountGroup.at(collection_index).set(rfzAttributes[rfz_index]);}
+      });
+      _.each(addKeys, function(key){
+        rfz_index = _.indexOf(_.pluck(rfzAttributes,'id'),key);
+        accountGroup.add(rfzAttributes[rfz_index]);
+      });
+      _.each(droppedKeys, function(key){
+        collection_index = _.indexOf(_.pluck(collectionAttributes,'id'),key);
+        accountGroup.remove(accountGroup.at(collection_index));
+      });
+      this.isInvalid();
+      this.tabManager(this.activeType);
+    },
+
+ </pre> -->
 <pre class="brush: js;">
 
 // This object is used when you have collection of models
