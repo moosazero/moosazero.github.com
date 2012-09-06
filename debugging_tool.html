@@ -27,14 +27,14 @@
        <h2>Debugging Tool</h2>
           <p>
 Some times in the process of developing website, you will need to use some debugging-URLs constantly. Remembering and managing these URL are not easy tasks.
-That’s why I decided to make this debugging tool. It will get an JSON object and create a menu. Menu items are two types
+Thatï¿½s why I decided to make this debugging tool. It will get an JSON object and create a menu. Menu items are two types
 Items without inputs; after clicking them URL will be visited right away
 Items with Input; after clicking them corresponding form would be open and you can visit URL with specified inputs by submitting the form.
 
 As an example, lets assume we need to test our website for subscribe users as well as guests. So we would have:
 <ul>
-<li>For subscribed user :www.ourwebsite.com/debug/set-status?value=”login”</li>
-<li>For guest user :www.ourwebsite.com/debug/set-status?value=”logout”</li>
+<li>For subscribed user :www.ourwebsite.com/debug/set-status?value=ï¿½loginï¿½</li>
+<li>For guest user :www.ourwebsite.com/debug/set-status?value=ï¿½logoutï¿½</li>
 <li>For guest user :www.ourwebsite.com/debug/logout</li>
 </ul>
 	  
@@ -44,15 +44,15 @@ Here is the JSON object
 	    
 var JSON =
 {"endpoints":[
-{"route":["get","/debug/logout"],"info":"Log out User”,”input-form":null}]},
+{"route":["get","/debug/logout"],"info":"Log out Userï¿½,ï¿½input-form":null}]},
 {
 "route":["post","debug/set-status"],
 "info":"Sets Status",
-“input-form":[["type",{Value",{"type":"string"}]]},
+ï¿½input-form":[["type",{Value",{"type":"string"}]]},
 {
 "route":["post","debug/set-status"],
 "info":"Sets Status",
-“input-form":[["type",{"choices":["a","b","c"],"type":"string"}],["name",{"type":"string"}]]}
+ï¿½input-form":[["type",{"choices":["a","b","c"],"type":"string"}],["name",{"type":"string"}]]}
 ]}
 
 </script>
@@ -311,7 +311,7 @@ Here is the debugging tool class
 
   $(document).ready(function() {
     if ($.cookie("debuggingTool") === "true") {
-      var p = new Debug_Tool({endpoint:'/api/dev/json'});
+      var p = new Debug_Tool({endpoint:'/json'});
     }
   });
 
